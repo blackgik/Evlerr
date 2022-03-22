@@ -11,8 +11,8 @@ class User {
 		try {
 			return await UserModel.create(input);
 		} catch (e: any) {
-            throw new InternalServerError(e.message)
-        }
+			throw new InternalServerError(e.message);
+		}
 	}
 }
 

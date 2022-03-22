@@ -38,9 +38,12 @@ const userSchema = new mongoose.Schema(
 			},
 		},
 		role: { type: String, default: "user", enum: ["user", "agent", "agency"] },
+		companyId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 	},
 	{ timestamps: true },
 );
+
+userSchema.index({ email: "text", username: "text", companyId: "text" });
 
 userSchema.pre("save", async function (next) {
 	const self = this as UserDocument;
