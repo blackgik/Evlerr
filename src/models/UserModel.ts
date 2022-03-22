@@ -45,6 +45,14 @@ const userSchema = new mongoose.Schema(
 
 userSchema.index({ email: "text", username: "text", companyId: "text" });
 
+userSchema.methods.toJSON = function () {
+	const user = this;
+	const userObject = user.toObject();
+
+	delete userObject.password;
+	return userObject;
+};
+
 userSchema.pre("save", async function (next) {
 	const self = this as UserDocument;
 
