@@ -22,13 +22,13 @@ class User {
 		if (!user) throw new InvalidError("Invalid User");
 
 		const isValid = await user.comparePassword(password);
-		if(!isValid) throw new InvalidError("Invalid User ")
+		if (!isValid) throw new InvalidError("Invalid User ");
 
 		return user.toJSON();
 	}
 
 	async findUser(query: FilterQuery<UserDocument>) {
-		return await UserModel.findOne(query).lean()
+		return await UserModel.findOne(query).lean();
 	}
 }
 

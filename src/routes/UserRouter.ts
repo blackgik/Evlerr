@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { sessionSchema, userSchema } from "../schemaValidation/user.ValidationSchema";
-import validateResource from "../middlewares/validateResource-File";
+import validateResource from "../middlewares/validateResource";
 import userController from "../controllers/userController";
 import sessionController from "../controllers/sessionController";
 import { authentication } from "../middlewares/Auth";

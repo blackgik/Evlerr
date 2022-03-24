@@ -1,13 +1,13 @@
-import "express-async-errors";
 import dotenv from "dotenv";
 dotenv.config();
+import "express-async-errors";
 import cors from "cors";
 import config from "config";
 import express, { Request, Response, NextFunction } from "express";
 import rootFiles from "./routes/index";
 import connect from "./database/connect";
-import logger from "./utils/logger"
-import deserializer from "./middlewares/DeserialiseUser"
+import logger from "./utils/logger";
+import deserializer from "./middlewares/DeserialiseUser";
 import { ErrorHandler } from "./middlewares/ErrorHandler";
 import { NotFoundError } from "../lib/appErrors";
 
@@ -24,7 +24,7 @@ const app = express();
 app.use(express.json()); //for parsing application/json
 app.use(express.urlencoded({ extended: false })); //for parsing application/x-www-form-urlencoded
 app.use(cors());
-app.use(deserializer)
+app.use(deserializer);
 
 //  defining the port
 const port = config.get<number>("port");
@@ -45,5 +45,5 @@ app.use(ErrorHandler);
 
 app.listen(port, async () => {
 	logger.info(`server is up on port  ${port}`);
-    await connect();
+	await connect();
 });

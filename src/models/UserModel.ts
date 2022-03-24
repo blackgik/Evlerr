@@ -59,7 +59,7 @@ userSchema.pre("save", async function (next) {
 
 	if (!self.isModified("password")) return next();
 
-	const salt = await bcrypt.genSalt(config.get<number>("saltWorkFactor"));
+	const salt = await bcrypt.genSalt(parseInt(config.get<string>("saltWorkFactor")));
 	const hashPassword = await bcrypt.hash(self.password, salt);
 
 	self.password = hashPassword;
