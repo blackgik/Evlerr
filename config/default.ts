@@ -6,4 +6,4 @@ export default {
 	refreshTokenLT: process.env.REFRESH_TOKEN_LT,
 	privateKey: process.env.PRIVATE_KEY,
 	publicKey: process.env.PUBLIC_KEY
-};
+}
