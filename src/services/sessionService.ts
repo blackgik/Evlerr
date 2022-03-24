@@ -18,33 +18,33 @@ class Session {
 
 	async deleteSession(
 		query: FilterQuery<SessionDocument>,
-        update:UpdateQuery<SessionDocument>
+		update: UpdateQuery<SessionDocument>,
 	) {
-        await sessionsModel.updateOne(query, )
+		await sessionsModel.updateOne(query);
 		return await sessionsModel.remove(query);
 	}
 
-    async reIssueAccessToke({refreshToken}: {refreshToken:string }) {
-         const {decoded} = verifyJwt(refreshToken) 
+	async reIssueAccessToke({ refreshToken }: { refreshToken: string }) {
+		const { decoded } = verifyJwt(refreshToken);
 
-         if(!decoded || !get(decoded, "session")) return false
-         
-         const session = await sessionsModel.findById(get(decoded, "session"))
+		if (!decoded || !get(decoded, "session")) return false;
 
-         if(!session || !session.valid) return false
+		const session = await sessionsModel.findById(get(decoded, "session"));
 
-         const user = await userServices.findUser({_id: session.user});
+		if (!session || !session.valid) return false;
 
-         if(!user) return false
+		const user = await userServices.findUser({ _id: session.user });
 
-         //  create an acess token
+		if (!user) return false;
+
+		//  create an acess token
 		const accessToken = signJwt(
 			{ ...user, session: session._id },
 			{ expiresIn: config.get("accessTokenLT") },
 		);
 
-        return accessToken;
-    }
+		return accessToken;
+	}
 }
 
 export default new Session();

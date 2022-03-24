@@ -20,9 +20,9 @@
     "typescript": "^4.6.2"
   },
   "scripts": {
-    "start": "node build/src/app.js",
+    "start": "set NODE_ENV=production && node build/src/app.js",
     "build": "tsc -p .",
-    "dev": "ts-node-dev --respawn --transpile-only src/app.ts"
+    "dev": "set NODE_ENV=development && ts-node-dev --respawn --transpile-only src/app.ts"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
