@@ -1,10 +1,12 @@
-export default {
-	port: 3000,
-	dbUri: "mongodb://localhost:27017/evlerr",
-	saltWorkFactor: 10,
-	accessTokenLT: "20m",
-	refreshTokenLT: "1y",
-	privateKey: `-----BEGIN RSA PRIVATE KEY-----
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    port: 3000,
+    dbUri: "mongodb://localhost:27017/evlerr",
+    saltWorkFactor: 10,
+    accessTokenLT: "20m",
+    refreshTokenLT: "1y",
+    privateKey: `-----BEGIN RSA PRIVATE KEY-----
 MIIEogIBAAKCAQEAmmEp4mkrVeZ6VlbI2h69DUj+/MvMY6uarkjmxFVkxzsNI8pH
 oNg9STq7vWjJ2BIVqdcPobd5UjR2RpScLjDXLPSYTrcwAP2P4ONfdLFbjwoypkp3
 5Z/xXAFNE50usnOKyM35hBE/JOTxEhAsqdN/VxwvaoXooOXTy2tcsx1thw09BUMx
@@ -31,7 +33,7 @@ nRDNAoGAATn+C92O0yLI5Wil2n4T2fKBZmeVy1L2j5VsEVoZUYssADkm8j+cFilQ
 OWg+jS5+R1Hqr5/9yxCVPJx2qkfc/g/eguGkGS5DRspMIhj/5FSJj1S/wAPabikv
 7gGIPe8uGhpOivpchB3GfduKqRw3zoRtarICbqbO2y80FKPgU+Y=
 -----END RSA PRIVATE KEY-----`,
-	publicKey: `-----BEGIN PUBLIC KEY-----
+    publicKey: `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmmEp4mkrVeZ6VlbI2h69
 DUj+/MvMY6uarkjmxFVkxzsNI8pHoNg9STq7vWjJ2BIVqdcPobd5UjR2RpScLjDX
 LPSYTrcwAP2P4ONfdLFbjwoypkp35Z/xXAFNE50usnOKyM35hBE/JOTxEhAsqdN/

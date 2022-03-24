@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import appResponse from "../../lib/appResponse";
-import {Response, Request, NextFunction, ErrorRequestHandler} from "express";
+import { Response, Request, NextFunction, ErrorRequestHandler } from "express";
 const mongooseValidationError = mongoose.Error.ValidationError;
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -12,13 +12,17 @@ const errorNames = [
 	"SyntaxError",
 	"MongooseError",
 	"MongoError",
+	"ZodError",
 ];
 
-export const ErrorHandler = function (error:any, req: Request, res:Response, next:NextFunction) {
+export const ErrorHandler = function (
+	error: any,
+	req: Request,
+	res: Response,
+	next: NextFunction,
+) {
 	if (error.name === "VobbioError" || error.isOperational) {
-		return res
-			.status(error.statusCode)
-			.send(appResponse(error.message, null, false));
+		return res.status(error.statusCode).send(appResponse(error.message, null, false));
 	}
 
 	if (error instanceof mongooseValidationError) {
@@ -29,27 +33,30 @@ export const ErrorHandler = function (error:any, req: Request, res:Response, nex
 				appResponse(
 					"validation error occurred check your inputs for corrections",
 					null,
-					errorMessages
-				)
+					errorMessages,
+				),
 			);
 	}
 
 	if (error.hasOwnProperty("name") && error.name === "MongoError") {
 		const data = error && error.errmsg ? error.errmsg : null;
-		return res
-			.status(400)
-			.send(appResponse("the entry already exist", data, false));
+		return res.status(400).send(appResponse("the entry already exist", data, false));
 	}
 
 	if (errorNames.includes(error.name)) {
-		if(error.name === "TokenExpiredError") {
-			return res.status(400).send(appResponse("Token has expired, Request a reset password again", null, false));
+		if (error.name === "TokenExpiredError") {
+			return res
+				.status(400)
+				.send(
+					appResponse("Token has expired, Request a reset password again", null, false),
+				);
 		}
+
 		return res.status(400).send(appResponse(error.message, null, false));
 	}
 
 	// log error
-	console.error(error);
+	// console.error(error);
 
 	const message = isProduction
 		? "An unexpected error has occured. Please, contact the administrator"

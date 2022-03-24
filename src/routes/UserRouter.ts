@@ -1,7 +1,9 @@
 import { Router } from "express";
-import { userSchema } from "../schemaValidation/user.ValidationSchema";
-import validateResource from "../middlewares/validateResource";
+import { sessionSchema, userSchema } from "../schemaValidation/user.ValidationSchema";
+import validateResource from "../middlewares/ValidateResource";
 import userController from "../controllers/userController";
+import sessionController from "../controllers/sessionController";
+import { authentication } from "../middlewares/Auth";
 
 const router = Router();
 export = function () {
@@ -10,6 +12,13 @@ export = function () {
 		validateResource(userSchema),
 		userController.createUserHandler,
 	);
+	router.post(
+		"/auth/createSession",
+		validateResource(sessionSchema),
+		sessionController.createSessionHandler,
+	);
+	router.get("/auth/get-sessions", authentication, sessionController.getSessionsHandler);
+	router.delete("/auth/delete-session", authentication, sessionController.deleteSessionHandler)
 
 	return router;
 };

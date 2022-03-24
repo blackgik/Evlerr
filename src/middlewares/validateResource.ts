@@ -1,6 +1,6 @@
 import { AnyZodObject } from "zod";
 import { Request, Response, NextFunction } from "express";
-import appResponse from "./../../lib/appResponse"
+import appResponse from "../../lib/appResponse"
 import { NotFoundError } from "../../lib/appErrors";
 
 const validate =
@@ -13,8 +13,12 @@ const validate =
 			});
             next();
 		} catch (e: any) {
-            throw new NotFoundError(e.message)
-		}
+			const errors = JSON.parse(e.message)
+			for (let err of errors) {
+				throw new NotFoundError(err.message)
+			};
+			
+		 }
 	};
 
 export default validate;
