@@ -21,7 +21,7 @@
   },
   "scripts": {
     "start": "node build/src/app.js",
-    "build": "tsc",
+    "build": "tsc -p .",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts"
   },
   "dependencies": {
