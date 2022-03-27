@@ -45,11 +45,13 @@ export = function () {
 		validateResource(forgotPasswordSchema),
 		userController.forgotPasswordHandler,
 	);
-	router.get(
+	router.patch(
 		"/auth/reset-password",
-		// validateResource(resetPasswordSchema),
+		validateResource(resetPasswordSchema),
 		userController.resetPasswordHandler,
 	);
+
+	router.
 
 	return router;
 };
