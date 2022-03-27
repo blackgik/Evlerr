@@ -5,7 +5,7 @@ import UserModel, { UserDocument } from "../models/UserModel";
 class User {
 	async createUser(
 		input: DocumentDefinition<
-			Omit<UserDocument, "updatedAt" | "createdAt" | "comparePassword" | "companyId">
+			Omit<UserDocument, "updatedAt" | "createdAt" | "comparePassword" | "companyId" | "isVerified">
 		>,
 	) {
 		try {

@@ -6,6 +6,7 @@ import { BadRequestError, InvalidError } from "../../lib/appErrors";
 
 export interface UserDocument extends mongoose.Document {
 	username: string;
+	isVerified: boolean;
 	password: string;
 	email: string;
 	role: string;
@@ -18,6 +19,7 @@ export interface UserDocument extends mongoose.Document {
 const userSchema = new mongoose.Schema<UserDocument>(
 	{
 		username: { type: String, required: true, trim: true, min: 3 },
+		isVerified: {type: Boolean, defaul: false},
 		password: {
 			type: String,
 			required: true,
