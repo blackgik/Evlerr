@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-	forgotPasswordSchema,
+	emailValidationSchema,
 	resetPasswordSchema,
 	sessionSchema,
 	userSchema,
@@ -42,7 +42,7 @@ export = function () {
 
 	router.post(
 		"/auth/forgot-password",
-		validateResource(forgotPasswordSchema),
+		validateResource(emailValidationSchema),
 		userController.forgotPasswordHandler,
 	);
 	router.patch(
@@ -51,7 +51,11 @@ export = function () {
 		userController.resetPasswordHandler,
 	);
 
-	router.
+	router.post(
+		"/auth/resend-email",
+		validateResource(emailValidationSchema),
+		userController.resendEmailHandler,
+	);
 
 	return router;
 };

@@ -6,7 +6,7 @@ import { emailVerification, passwordValidationMail } from "../utils/mailer";
 
 import {
 	createUserInput,
-	forgotPassInput,
+	emailInput,
 	resetPasswordInput,
 	tokenString,
 } from "../schemaValidation/user.ValidationSchema";
@@ -49,7 +49,7 @@ class User {
 	}
 	// forgotPassInput
 	async forgotPasswordHandler(
-		req: Request<{}, {}, forgotPassInput["body"]>,
+		req: Request<{}, {}, emailInput["body"]>,
 		res: Response,
 	) {
 		const { email } = req.body;
@@ -75,9 +75,27 @@ class User {
 		const { password } = req.body;
 
 		// validate user and update his password
-		const updatePassword = await authService.resetPassword(token, password)
+		const updatePassword = await authService.resetPassword(token, password);
 
-		res.send(appResponse("password changed successfully", updatePassword))
+		res.send(appResponse("password changed successfully", updatePassword));
+	}
+	async resendEmailHandler(
+		req: Request<{}, {}, emailInput["body"]>,
+		res: Response,
+	) {
+		const { email } = req.body;
+		const validateEmail = await authService.validateEmail({ email });
+
+		const token = await signJwt(
+			{ ...validateEmail.toJSON() },
+			{
+				expiresIn: config.get("accessTokenLT"),
+			},
+		);
+
+		await emailVerification(email, "Verfiy Email", token);
+
+		res.send(appResponse("Resent email sucessfully", true));
 	}
 }
 

@@ -42,7 +42,7 @@ export const verificationTokenSchema = object({
 	}),
 });
 
-export const forgotPasswordSchema = object({
+export const emailValidationSchema = object({
 	body: object({
 		email: string({
 			required_error: "email is required",
@@ -69,7 +69,7 @@ export type createUserInput = Omit<
 	"body.confirmPassword"
 >;
 export type tokenString = TypeOf<typeof verificationTokenSchema>;
-export type forgotPassInput = TypeOf<typeof forgotPasswordSchema>;
+export type emailInput = TypeOf<typeof emailValidationSchema>;
 export type resetPasswordInput = Omit<
 	TypeOf<typeof resetPasswordSchema>,
 	"body.confirmPassword"
