@@ -17,13 +17,13 @@ class Session {
 		);
 
 		//  create an acess token
-		const accessToken = signJwt(
+		const accessToken = await signJwt(
 			{ ...user, session: userSession._id },
 			{ expiresIn: config.get("accessTokenLT") },
 		);
 
 		// create a refresh token
-		const refreshToken = signJwt(
+		const refreshToken = await signJwt(
 			{ ...user, session: userSession._id },
 			{ expiresIn: config.get("refreshTokenLT") },
 		);
@@ -48,10 +48,10 @@ class Session {
 			{ valid: false },
 		);
 
-		res.send(appResponse("deleted session", { accessToken: null, refreshToken: null }));
+		res.send(
+			appResponse("deleted session", { accessToken: null, refreshToken: null }),
+		);
 	}
-
-	async reIssueAccessToken() {}
 }
 
 export default new Session();

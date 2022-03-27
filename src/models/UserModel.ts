@@ -16,10 +16,10 @@ export interface UserDocument extends mongoose.Document {
 	comparePassword(candidatePassword: string): Promise<Boolean>;
 }
 
-const userSchema = new mongoose.Schema<UserDocument>(
+const userSchema = new mongoose.Schema(
 	{
 		username: { type: String, required: true, trim: true, min: 3 },
-		isVerified: {type: Boolean, defaul: false},
+		isVerified: {type: Boolean, default: false},
 		password: {
 			type: String,
 			required: true,
@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
 	{ timestamps: true },
 );
 
-userSchema.index({ email: "text", username: "text", companyId: "text" });
+userSchema.index({ email: "text", username: "text", companyId: "text", isVerified: "text"});
 
 userSchema.methods.toJSON = function () {
 	const user = this;

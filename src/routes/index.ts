@@ -1,5 +1,5 @@
 import { Router } from "express";
-import UserRouter from "./UserRouter";
+import UserRouter from "./AuthRouter";
 
 export = (router:Router) => {
 	router.use(UserRouter());

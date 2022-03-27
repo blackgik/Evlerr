@@ -2,11 +2,13 @@ import { Router } from "express";
 import {
 	sessionSchema,
 	userSchema,
+	verificationTokenSchema,
 } from "../schemaValidation/user.ValidationSchema";
 import validateResource from "../middlewares/validateResource";
 import userController from "../controllers/userController";
 import sessionController from "../controllers/sessionController";
 import { authentication } from "../middlewares/Auth";
+import { valuesIn } from "lodash";
 
 const router = Router();
 export = function () {
@@ -30,7 +32,11 @@ export = function () {
 		authentication,
 		sessionController.deleteSessionHandler,
 	);
-
+	router.get(
+		"/auth/verfity-token",
+		validateResource(verificationTokenSchema),
+		userController.validateToken,
+	);
 
 	return router;
 };

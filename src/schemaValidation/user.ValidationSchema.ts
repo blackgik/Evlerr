@@ -34,4 +34,13 @@ export const sessionSchema = object({
 	}),
 });
 
+export const verificationTokenSchema  = object({
+	query: object({
+		token: string({
+			required_error: "token must be a string"
+		})
+	})
+})
+
 export type createUserInput = Omit<TypeOf<typeof userSchema>, "body.confirmPassword">;
+export type tokenString = TypeOf<typeof verificationTokenSchema>;

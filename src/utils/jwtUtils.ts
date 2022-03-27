@@ -5,7 +5,10 @@ import config from "config";
 const privateKey = config.get<string>("privateKey");
 const publicKey = config.get<string>("publicKey");
 
-export function signJwt(object: Object, options?: jwt.SignOptions | undefined) {
+export async function signJwt(
+	object: Object,
+	options?: jwt.SignOptions | undefined,
+) {
 	// sign with a private key
 	return jwt.sign(object, privateKey, {
 		...(options && options),
@@ -13,7 +16,7 @@ export function signJwt(object: Object, options?: jwt.SignOptions | undefined) {
 	});
 }
 
-export function verifyJwt(token: string) {
+export async function verifyJwt(token: string) {
 	// verify with a public key
 	try {
 		const decoded = jwt.verify(token, publicKey);
@@ -23,10 +26,11 @@ export function verifyJwt(token: string) {
 			decoded,
 		};
 	} catch (e: any) {
-        return {
-            valid: false,
-            expired: e.message === "jwt expired",
-            decoded: null
-        }
-    }
+		console.log(e)
+		return {
+			valid: false,
+			expired: e.message === "jwt expired",
+			decoded: null,
+		};
+	}
 }

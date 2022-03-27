@@ -2,8 +2,13 @@ import { get } from "lodash";
 import { NextFunction, Request, Response } from "express";
 import { verifyJwt } from "../utils/jwtUtils";
 import sessionService from "../services/sessionService";
+import UserModel from "../models/UserModel";
 
-const authorization = async (req: Request, res: Response, next: NextFunction) => {
+const authorization = async (
+	req: Request,
+	res: Response,
+	next: NextFunction,
+) => {
 	const accessToken = get(req, "headers.x-access-token");
 	const refreshToken = get(req, "headers.x-refresh-token");
 
@@ -11,28 +16,34 @@ const authorization = async (req: Request, res: Response, next: NextFunction) =>
 		return next();
 	}
 
-	const { decoded, expired } = verifyJwt(accessToken);
+	const { decoded, expired } = await verifyJwt(accessToken);
 
 	if (decoded) {
-		res.locals.user = decoded;
+		const user = await UserModel.findById(get(decoded, "_id"));
+
+		res.locals.user = user;
 
 		return next();
 	}
 
 	if (expired && refreshToken) {
-       
-		const newAccessToken = await sessionService.reIssueAccessToke({ refreshToken });
+		const newAccessToken = await sessionService.reIssueAccessToken({
+			refreshToken,
+		});
 
 		if (newAccessToken) {
 			res.setHeader("x-access-tokn", newAccessToken);
 
-			const { decoded } = verifyJwt(newAccessToken);
-			res.locals.user = decoded;
-            
-            return next();
+			const { decoded } = await verifyJwt(newAccessToken);
+
+			const user = await UserModel.findById(get(decoded, "_id"));
+
+			res.locals.user = user;
+
+			return next();
 		}
 
-        return next();
+		return next();
 	}
 
 	return next();

@@ -4,6 +4,9 @@ import config from "config";
 import sessionsModel, { SessionDocument } from "../models/sessionsModel";
 import { signJwt, verifyJwt } from "../utils/jwtUtils";
 import userServices from "./userServices";
+import { InvalidError } from "../../lib/appErrors";
+import UserModel from "../models/UserModel";
+import { decode } from "punycode";
 
 class Session {
 	async createSession(userId: string, userAgent: string) {
@@ -24,8 +27,8 @@ class Session {
 		return await sessionsModel.remove(query);
 	}
 
-	async reIssueAccessToke({ refreshToken }: { refreshToken: string }) {
-		const { decoded } = verifyJwt(refreshToken);
+	async reIssueAccessToken({ refreshToken }: { refreshToken: string }) {
+		const { decoded } = await verifyJwt(refreshToken);
 
 		if (!decoded || !get(decoded, "session")) return false;
 
@@ -44,6 +47,22 @@ class Session {
 		);
 
 		return accessToken;
+	}
+
+	async validateToken(token: string) {
+		const { decoded, expired } = await verifyJwt(token);
+
+		if (expired || !decoded)
+			throw new InvalidError("User does not exist or invalid token");
+
+		// find user and verify user
+		const id = get(decoded, "_id")
+		const user = await UserModel.findById(id);
+	
+		user!.isVerified = true;
+		await user!.save()
+
+		return user
 	}
 }
 

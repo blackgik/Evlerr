@@ -7,5 +7,5 @@ export default {
 	privateKey: process.env.PRIVATE_KEY,
 	publicKey: process.env.PUBLIC_KEY,
 	sendgridKey: process.env.SENDGRID_API_KEY,
-	emailSender: process.env.EMAIL_SENDER
-}
+	emailSender: process.env.EMAIL_SENDER,
+};
