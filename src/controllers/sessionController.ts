@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import config from "config";
 import sessionService from "../services/sessionService";
-import userServices from "../services/userServices";
+import userServices from "../services/authService";
 import appResponse from "./../../lib/appResponse";
 import { signJwt } from "../utils/jwtUtils";
 
@@ -47,6 +47,8 @@ class Session {
 			{ _id: sessionId },
 			{ valid: false },
 		);
+
+		console.log(deleteSession)
 
 		res.send(
 			appResponse("deleted session", { accessToken: null, refreshToken: null }),

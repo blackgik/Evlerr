@@ -3,7 +3,7 @@ import { FilterQuery, UpdateQuery } from "mongoose";
 import config from "config";
 import sessionsModel, { SessionDocument } from "../models/sessionsModel";
 import { signJwt, verifyJwt } from "../utils/jwtUtils";
-import userServices from "./userServices";
+import userServices from "./authService";
 import { InvalidError } from "../../lib/appErrors";
 import UserModel from "../models/UserModel";
 import { decode } from "punycode";
@@ -23,8 +23,9 @@ class Session {
 		query: FilterQuery<SessionDocument>,
 		update: UpdateQuery<SessionDocument>,
 	) {
-		await sessionsModel.updateOne(query);
-		return await sessionsModel.remove(query);
+		let ses = await sessionsModel.findOne(query);
+		console.log(query)
+		return await sessionsModel.deleteOne(query);
 	}
 
 	async reIssueAccessToken({ refreshToken }: { refreshToken: string }) {

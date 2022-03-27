@@ -1,11 +1,13 @@
 import { Router } from "express";
 import {
+	forgotPasswordSchema,
+	resetPasswordSchema,
 	sessionSchema,
 	userSchema,
 	verificationTokenSchema,
 } from "../schemaValidation/user.ValidationSchema";
 import validateResource from "../middlewares/validateResource";
-import userController from "../controllers/userController";
+import userController from "../controllers/authController";
 import sessionController from "../controllers/sessionController";
 import { authentication } from "../middlewares/Auth";
 import { valuesIn } from "lodash";
@@ -35,7 +37,18 @@ export = function () {
 	router.get(
 		"/auth/verfity-token",
 		validateResource(verificationTokenSchema),
-		userController.validateToken,
+		userController.validateTokenHandler,
+	);
+
+	router.post(
+		"/auth/forgot-password",
+		validateResource(forgotPasswordSchema),
+		userController.forgotPasswordHandler,
+	);
+	router.get(
+		"/auth/reset-password",
+		// validateResource(resetPasswordSchema),
+		userController.resetPasswordHandler,
 	);
 
 	return router;
