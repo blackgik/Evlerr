@@ -5,6 +5,7 @@ import {
 	InternalServerError,
 	InvalidError,
 	NotFoundError,
+	UnAuthorizedError,
 } from "../../lib/appErrors";
 import UserModel, { UserDocument } from "../models/UserModel";
 import { verifyJwt } from "../utils/jwtUtils";
@@ -43,6 +44,8 @@ class User {
 
 		const isValid = await user.comparePassword(password);
 		if (!isValid) throw new InvalidError("Invalid User ");
+
+		if(!user.isVerified) throw new UnAuthorizedError("User is not verified.")
 
 		return user.toJSON();
 	}
