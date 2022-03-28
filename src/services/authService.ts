@@ -20,6 +20,16 @@ class User {
 				| "comparePassword"
 				| "companyId"
 				| "isVerified"
+				| "fullName"
+				| "description"
+				| "profilePicture"
+				| "web"
+				| "phone"
+				| "fax"
+				| "friendlyAddress"
+				| "mapLocation"
+				| "socials"
+				| "country"
 			>
 		>,
 	) {
@@ -45,7 +55,7 @@ class User {
 		const isValid = await user.comparePassword(password);
 		if (!isValid) throw new InvalidError("Invalid User ");
 
-		if(!user.isVerified) throw new UnAuthorizedError("User is not verified.")
+		if (!user.isVerified) throw new UnAuthorizedError("User is not verified.");
 
 		return user.toJSON();
 	}

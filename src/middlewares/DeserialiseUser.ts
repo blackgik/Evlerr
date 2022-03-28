@@ -24,7 +24,7 @@ const authorization = async (req: Request, res: Response, next: NextFunction) =>
 		const newAccessToken = await sessionService.reIssueAccessToken({ refreshToken });
 
 		if (newAccessToken) {
-			res.setHeader("x-access-tokn", newAccessToken);
+			res.setHeader("x-access-token", newAccessToken);
 
 			const { decoded } = await verifyJwt(newAccessToken);
 			res.locals.user = decoded;

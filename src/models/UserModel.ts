@@ -9,6 +9,16 @@ export interface UserDocument extends mongoose.Document {
 	isVerified: boolean;
 	password: string;
 	email: string;
+	fullName: string;
+	description: string;
+	profilePicture: object;
+	web: string;
+	phone: string;
+	fax: string;
+	friendlyAddress: string;
+	mapLocation: string;
+	socials: Array<string>;
+	country: string;
 	role: string;
 	companyId: mongoose.Types.ObjectId;
 	createdAt: Date;
@@ -19,7 +29,20 @@ export interface UserDocument extends mongoose.Document {
 const userSchema = new mongoose.Schema(
 	{
 		username: { type: String, required: true, trim: true, min: 3 },
-		isVerified: {type: Boolean, default: false},
+		fullName: { type: String, trim: true, min: 3 },
+		description: { type: String, trim: true, min: 3 },
+		profilePicture: {
+			url: { type: String, trim: true, min: 3 },
+			publicId: { type: String, trim: true, min: 3 },
+		},
+		web: { type: String, trim: true, min: 3 },
+		phone: { type: String, trim: true, min: 3 },
+		fax: { type: String, trim: true, min: 3 },
+		friendlyAddress: { type: String, trim: true, min: 3 },
+		mapLocation: { type: String, trim: true, min: 3 },
+		socials: { type: Array },
+		country: { type: String, trim: true, min: 3 },
+		isVerified: { type: Boolean, default: false },
 		password: {
 			type: String,
 			required: true,
@@ -46,7 +69,12 @@ const userSchema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
-userSchema.index({ email: "text", username: "text", companyId: "text", isVerified: "text"});
+userSchema.index({
+	email: "text",
+	username: "text",
+	companyId: "text",
+	isVerified: "text",
+});
 
 userSchema.methods.toJSON = function () {
 	const user = this;
@@ -74,7 +102,9 @@ userSchema.methods.comparePassword = async function (
 ): Promise<Boolean> {
 	const self = this as UserDocument;
 
-	return await bcrypt.compare(candidatePassword, self.password).catch((e) => false);
+	return await bcrypt
+		.compare(candidatePassword, self.password)
+		.catch((e) => false);
 };
 
 export default mongoose.model<UserDocument>("User", userSchema);

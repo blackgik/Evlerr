@@ -10,7 +10,7 @@ import validateResource from "../middlewares/validateResource";
 import userController from "../controllers/authController";
 import sessionController from "../controllers/sessionController";
 import { authentication } from "../middlewares/Auth";
-import { valuesIn } from "lodash";
+
 
 const router = Router();
 export = function () {
