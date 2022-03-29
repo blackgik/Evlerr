@@ -3,7 +3,10 @@ import validateResource from "../middlewares/validateResource";
 import userController from "../controllers/userController";
 import { authentication, authFunctions } from "../middlewares/Auth";
 import { upload } from "../../lib/multer";
-import { PublicIdValidationSchema } from "../schemaValidation/userValidationSchema";
+import {
+	PublicIdValidationSchema,
+	UpdateProfileValidationSchema,
+} from "../schemaValidation/userValidationSchema";
 
 const router = Router();
 
@@ -23,6 +26,15 @@ export = function () {
 		"/user/delete-profile",
 		[validateResource(PublicIdValidationSchema), authentication, authFunctions],
 		userController.deletePhotoHandler,
+	);
+	router.patch(
+		"/user/update-profile",
+		[
+			validateResource(UpdateProfileValidationSchema),
+			authentication,
+			authFunctions,
+		],
+		userController.updateProfileHander,
 	);
 	return router;
 };

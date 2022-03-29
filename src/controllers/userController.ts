@@ -1,6 +1,9 @@
 import { application, Request, Response } from "express";
 import { BadRequestError } from "../../lib/appErrors";
-import { publicIdString } from "../schemaValidation/userValidationSchema";
+import {
+	publicIdString,
+	updateInput,
+} from "../schemaValidation/userValidationSchema";
 import userService from "../services/userService";
 import appResponse from "./../../lib/appResponse";
 
@@ -13,7 +16,7 @@ class User {
 
 	async uploadProfilePicsHandler(req: Request, res: Response) {
 		if (!req.file?.path)
-			throw new BadRequestError("Missin required photo type");
+			throw new BadRequestError("Missing required photo type");
 
 		const path = req.file.path;
 		const user = res.locals.user;
@@ -29,9 +32,19 @@ class User {
 	) {
 		const { publicId } = req.query;
 
-        let deletePicture = await userService.deletePicture(publicId)
+		let deletePicture = await userService.deletePicture(publicId);
 
-        res.send(appResponse("deleted Image successfully", deletePicture))
+		res.send(appResponse("deleted Image successfully", deletePicture));
+	}
+
+	async updateProfileHander(
+		req: Request<{}, {}, updateInput["body"]>,
+		res: Response,
+	) {
+		const user = res.locals.user;
+		const updatedProfile = await userService.updateProfile(user, req.body);
+
+		res.send(appResponse("updated profile successfully", updatedProfile));
 	}
 }
 
