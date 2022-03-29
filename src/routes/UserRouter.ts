@@ -2,6 +2,8 @@ import { Router } from "express";
 import validateResource from "../middlewares/validateResource";
 import userController from "../controllers/userController";
 import { authentication, authFunctions } from "../middlewares/Auth";
+import { upload } from "../../lib/multer";
+import { PublicIdValidationSchema } from "../schemaValidation/userValidationSchema";
 
 const router = Router();
 
@@ -11,6 +13,16 @@ export = function () {
 		authentication,
 		authFunctions,
 		userController.MyProfileHandler,
+	);
+	router.post(
+		"/user/photo-uploader",
+		[upload.single("photo"), authentication, authFunctions],
+		userController.uploadProfilePicsHandler,
+	);
+	router.delete(
+		"/user/delete-profile",
+		[validateResource(PublicIdValidationSchema), authentication, authFunctions],
+		userController.deletePhotoHandler,
 	);
 	return router;
 };

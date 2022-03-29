@@ -5,7 +5,7 @@ import {
 	sessionSchema,
 	userSchema,
 	verificationTokenSchema,
-} from "../schemaValidation/user.ValidationSchema";
+} from "../schemaValidation/auth.ValidationSchema";
 import validateResource from "../middlewares/validateResource";
 import userController from "../controllers/authController";
 import sessionController from "../controllers/sessionController";

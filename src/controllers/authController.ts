@@ -9,7 +9,7 @@ import {
 	emailInput,
 	resetPasswordInput,
 	tokenString,
-} from "../schemaValidation/user.ValidationSchema";
+} from "../schemaValidation/auth.ValidationSchema";
 import { signJwt } from "../utils/jwtUtils";
 import sessionService from "../services/sessionService";
 import authService from "../services/authService";
