@@ -2,7 +2,10 @@ import { Router } from "express";
 import validateResource from "../middlewares/validateResource";
 import { authentication, authFunctions } from "../middlewares/Auth";
 import propertyController from "../controllers/propertyController";
-import { NewPropertySchema } from "../schemaValidation/propertyVallidationSchema";
+import {
+	NewPropertySchema,
+	PropertyIdSchemaValidation,
+} from "../schemaValidation/propertyVallidationSchema";
 import { upload } from "./../../lib/multer";
 import userController from "../controllers/userController";
 
@@ -19,5 +22,15 @@ export = function () {
 		upload.single("photo"),
 		userController.MediaUploader,
 	);
+	router.delete(
+		"/user/delete-property/:propertyId",
+		[
+			validateResource(PropertyIdSchemaValidation),
+			authentication,
+			authFunctions,
+		],
+		propertyController.deletePropertyHandler,
+	);
+
 	return router;
 };

@@ -67,4 +67,13 @@ export const NewPropertySchema = object({
 	}),
 });
 
+export const PropertyIdSchemaValidation = object({
+    params: object({ 
+        propertyId: string({
+            required_error: "property id is required"
+        })
+    })
+})
+
+export type propertyIdInput = TypeOf<typeof PropertyIdSchemaValidation>
 export type propertyInput = TypeOf<typeof NewPropertySchema>;

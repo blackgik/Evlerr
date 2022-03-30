@@ -1,8 +1,9 @@
 import { get } from "lodash";
-import { DocumentDefinition } from "mongoose";
+import { DocumentDefinition, FilterQuery } from "mongoose";
 import PropertyModel from "../models/PropertyModel";
 import { InternalServerError } from "../../lib/appErrors";
 import { PropertyDocument } from "./../interfaces/Iproperty";
+import { query } from "express";
 
 class Property {
 	async submitPropety(
@@ -19,6 +20,15 @@ class Property {
 				agentId: get(user, "_id"),
 			};
 			return await PropertyModel.create(data);
+		} catch (err: any) {
+			throw new InternalServerError(err.message);
+		}
+	}
+
+	async deleteProperty(query: FilterQuery<PropertyDocument>) {
+		console.log(query);
+		try {
+			return await PropertyModel.findOneAndDelete(query);
 		} catch (err: any) {
 			throw new InternalServerError(err.message);
 		}
