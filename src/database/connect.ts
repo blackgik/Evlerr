@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import config from "config";
-import logger from "../utils/logger"
+import logger from "../utils/logger";
 
 async function connect() {
-	const dbUri:string = config.get<string>("dbUri");
+	const dbUri: string = config.get<string>("dbUri");
 
 	try {
-		await mongoose.connect(dbUri);
+		await mongoose.connect(dbUri, { autoIndex: true });
 		logger.info("connected successfully to database");
 	} catch (err) {
 		logger.error("Failed connection to database");

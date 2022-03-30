@@ -22,6 +22,11 @@ export = function () {
 		upload.single("photo"),
 		userController.MediaUploader,
 	);
+	router.get(
+		"/user/view-property/:propertyId",
+		validateResource(PropertyIdSchemaValidation),
+		propertyController.viewPropertyHandler,
+	);
 	router.delete(
 		"/user/delete-property/:propertyId",
 		[

@@ -22,6 +22,14 @@ class Property {
 
         res.send(appResponse("deleted property successfully", deletedProperty))
 	}
+
+    async viewPropertyHandler(req:Request<propertyIdInput["params"]>, res:Response) {
+        const {propertyId} = req.params;
+
+        const property = await propertyService.viewProperty({_id: propertyId})
+
+        res.send(appResponse("viewing property successfully", property))
+    }
 }
 
 export default new Property();

@@ -77,4 +77,11 @@ const propertySchema = new mongoose.Schema(
 	{ timestamps: true },
 );
 
+propertySchema.index({
+	_id: "text",
+	propertyType: "text",
+	label: "text",
+	price: "text",
+});
+
 export default mongoose.model<PropertyDocument>("Property", propertySchema);

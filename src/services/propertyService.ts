@@ -33,6 +33,12 @@ class Property {
 			throw new InternalServerError(err.message);
 		}
 	}
+
+	async viewProperty(query: FilterQuery<PropertyDocument>) {
+		try {
+            return await PropertyModel.findById(query._id)
+		} catch (err: any) {}
+	}
 }
 
 export default new Property();
