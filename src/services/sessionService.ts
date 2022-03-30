@@ -1,12 +1,12 @@
 import { get } from "lodash";
 import { FilterQuery, UpdateQuery } from "mongoose";
 import config from "config";
-import sessionsModel, { SessionDocument } from "../models/sessionsModel";
+import sessionsModel from "../models/sessionsModel";
 import { signJwt, verifyJwt } from "../utils/jwtUtils";
 import userServices from "./authService";
-import { InvalidError } from "../../lib/appErrors";
 import UserModel from "../models/UserModel";
-import { decode } from "punycode";
+import { InvalidError } from "../../lib/appErrors";
+import { SessionDocument } from "../interfaces/Isession";
 
 class Session {
 	async createSession(userId: string, userAgent: string) {
@@ -24,7 +24,7 @@ class Session {
 		update: UpdateQuery<SessionDocument>,
 	) {
 		let ses = await sessionsModel.findOne(query);
-		console.log(query)
+		console.log(query);
 		return await sessionsModel.deleteOne(query);
 	}
 
@@ -57,13 +57,13 @@ class Session {
 			throw new InvalidError("User does not exist or invalid token");
 
 		// find user and verify user
-		const id = get(decoded, "_id")
+		const id = get(decoded, "_id");
 		const user = await UserModel.findById(id);
-	
-		user!.isVerified = true;
-		await user!.save()
 
-		return user
+		user!.isVerified = true;
+		await user!.save();
+
+		return user;
 	}
 }
 

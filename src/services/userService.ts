@@ -1,5 +1,5 @@
 import { DocumentDefinition, FilterQuery } from "mongoose";
-import { UserDocument } from "../models/UserModel";
+import { UserDocument } from "../interfaces/Iuser";
 import { deleteFromCloud, uploadToCloud } from "../../lib/cloudinary";
 class User {
 	async uploadPicture(path: string, user: any) {
@@ -30,6 +30,14 @@ class User {
 		await user.save();
 
 		return user;
+	}
+
+	async MediaUploader(path: string) {
+		const { secure_url, public_id }: { secure_url: string; public_id: string } =
+			await uploadToCloud(path);
+		if (secure_url && public_id) {
+			return { secure_url, public_id };
+		}
 	}
 }
 

@@ -46,6 +46,17 @@ class User {
 
 		res.send(appResponse("updated profile successfully", updatedProfile));
 	}
+
+	async MediaUploader(req: Request, res: Response) {
+		if (!req.file?.path)
+			throw new BadRequestError("Missing required photo type");
+
+		const path = req.file.path;
+
+		const data = await userService.MediaUploader(path);
+
+		res.send(appResponse("uploaded file successfully", data));
+	}
 }
 
 export default new User();

@@ -20,6 +20,8 @@ export const authFunctions = async (
 ) => {
 	const user = await UserModel.findById(res.locals.user._id);
 
+	if(!user?.isVerified) throw new UnAuthorizedError("Unauthorized user")
+
 	res.locals.user = user;
 
 	return next();

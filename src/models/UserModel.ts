@@ -3,30 +3,9 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import config from "config";
 import { BadRequestError, InvalidError } from "../../lib/appErrors";
+import { UserDocument } from "../interfaces/Iuser";
 
-export interface UserDocument extends mongoose.Document {
-	username: string;
-	isVerified: boolean;
-	password: string;
-	email: string;
-	fullName: string;
-	description: string;
-	profilePicture: object;
-	web: string;
-	phone: string;
-	fax: string;
-	friendlyAddress: string;
-	mapLocation: string;
-	socials: Array<string>;
-	country: string;
-	role: string;
-	companyId: mongoose.Types.ObjectId;
-	createdAt: Date;
-	updatedAt: Date;
-	comparePassword(candidatePassword: string): Promise<Boolean>;
-}
-
-const userSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema<UserDocument>(
 	{
 		username: { type: String, required: true, trim: true, min: 3 },
 		fullName: { type: String, trim: true, min: 3 },
@@ -40,7 +19,7 @@ const userSchema = new mongoose.Schema(
 		fax: { type: String, trim: true, min: 3 },
 		friendlyAddress: { type: String, trim: true, min: 3 },
 		mapLocation: { type: String, trim: true, min: 3 },
-		socials: { type: Array },
+		socials: [{ type: String }],
 		country: { type: String, trim: true, min: 3 },
 		isVerified: { type: Boolean, default: false },
 		password: {

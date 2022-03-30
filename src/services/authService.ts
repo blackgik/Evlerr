@@ -7,7 +7,8 @@ import {
 	NotFoundError,
 	UnAuthorizedError,
 } from "../../lib/appErrors";
-import UserModel, { UserDocument } from "../models/UserModel";
+import UserModel from "../models/UserModel";
+import { UserDocument } from "../interfaces/Iuser";
 import { verifyJwt } from "../utils/jwtUtils";
 
 class User {
