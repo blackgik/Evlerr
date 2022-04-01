@@ -36,6 +36,11 @@ export = function () {
 		],
 		propertyController.deletePropertyHandler,
 	);
+	router.get(
+		"/user/view-properties",
+		[authentication, authFunctions],
+		propertyController.viewAllProperties,
+	);
 
 	return router;
 };

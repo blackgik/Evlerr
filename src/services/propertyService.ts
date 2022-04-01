@@ -37,8 +37,19 @@ class Property {
 	async viewProperty(query: FilterQuery<PropertyDocument>) {
 		try {
             return await PropertyModel.findById(query._id)
-		} catch (err: any) {}
+		} catch (err: any) {
+            throw new InternalServerError(err.message)
+        }
 	}
+
+    async fetchUserProperties(query: FilterQuery<PropertyDocument>) {
+        try {
+            return await PropertyModel.find(query)
+		} catch (err: any) {
+            throw new InternalServerError(err.message)
+        }
+
+    }
 }
 
 export default new Property();

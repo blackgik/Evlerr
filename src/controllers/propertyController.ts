@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { propertyIdInput, propertyInput } from "../schemaValidation/propertyVallidationSchema";
+import {
+	propertyIdInput,
+	propertyInput,
+} from "../schemaValidation/propertyVallidationSchema";
 import propertyService from "../services/propertyService";
 import appResponse from "./../../lib/appResponse";
 
@@ -15,21 +18,38 @@ class Property {
 		res.send(appResponse("submitted propert successfuly", submittedProperty));
 	}
 
-	async deletePropertyHandler(req: Request<propertyIdInput["params"]>, res: Response) {
+	async deletePropertyHandler(
+		req: Request<propertyIdInput["params"]>,
+		res: Response,
+	) {
 		const { propertyId } = req.params;
 
-        const deletedProperty = await propertyService.deleteProperty({_id: propertyId})
+		const deletedProperty = await propertyService.deleteProperty({
+			_id: propertyId,
+		});
 
-        res.send(appResponse("deleted property successfully", deletedProperty))
+		res.send(appResponse("deleted property successfully", deletedProperty));
 	}
 
-    async viewPropertyHandler(req:Request<propertyIdInput["params"]>, res:Response) {
-        const {propertyId} = req.params;
+	async viewPropertyHandler(
+		req: Request<propertyIdInput["params"]>,
+		res: Response,
+	) {
+		const { propertyId } = req.params;
 
-        const property = await propertyService.viewProperty({_id: propertyId})
+		const property = await propertyService.viewProperty({ _id: propertyId });
 
-        res.send(appResponse("viewing property successfully", property))
-    }
+		res.send(appResponse("viewing property successfully", property));
+	}
+
+	async viewAllProperties(req: Request, res: Response) {
+		const user = res.locals.user;
+		const getUserProperties = await propertyService.fetchUserProperties({
+			agentId: user._id,
+		});
+
+		res.send(appResponse("fetched properties successfully", getUserProperties));
+	}
 }
 
 export default new Property();
