@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { get } from "lodash";
 import {
+    deleteInput,
 	MemberInput,
 	SearchInput
 } from "../../schemaValidation/agencyMemebershipValidationSchema";
@@ -32,6 +33,15 @@ class Membership {
 
         res.send(appResponse("found member successfully", searchResult));
 	}
+
+    async deleteMemeberHandler(	req: Request<{}, {}, {}, deleteInput["query"]>,
+    res: Response) {
+        const {memberId} = req.query;
+
+        const deletedAgent =  await membershipService.deleteMember({memberId})
+
+        res.send(appResponse("deleted agent successfully", deletedAgent))
+    }
 }
 
 export default new Membership();

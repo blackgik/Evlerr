@@ -1,5 +1,6 @@
-import { Types } from "mongoose";
+import {FilterQuery, Types } from "mongoose";
 import { InternalServerError } from "../../../lib/appErrors";
+import { MembershipDocument } from "../../interfaces/IAgencyMembership";
 import MembershipModel from "../../models/Agency/MembershipModel";
 import UserModel from "../../models/UserModel";
 
@@ -27,6 +28,14 @@ class Membership {
 			throw new InternalServerError(err.message);
 		}
 	}
+
+    async deleteMember(query: FilterQuery<MembershipDocument>) {
+        try{
+            return await MembershipModel.findOneAndDelete(query)
+        }catch(err:any) {
+            throw new InternalServerError(err.message)
+        }
+    }
 }
 
 export default new Membership();

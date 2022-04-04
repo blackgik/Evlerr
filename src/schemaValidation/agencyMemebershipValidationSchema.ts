@@ -16,5 +16,14 @@ export const memberSearchSchema = object({
 	})
 });
 
+export const deleteMemberSchema = object({
+	query: object({
+		memberId: string({
+			required_error: "Missing required Member id"
+		})
+	})
+});
+
 export type MemberInput = TypeOf<typeof AddMemberSchema>;
 export type SearchInput = TypeOf<typeof memberSearchSchema>;
+export type deleteInput = TypeOf<typeof deleteMemberSchema>;
