@@ -33,12 +33,9 @@ const propertySchema = new mongoose.Schema(
 			url: { type: String, trim: true },
 			publicId: { type: String, trim: true },
 		},
-		gallery: [
-			{
-				url: { type: String, trim: true },
-				publicId: { type: String, trim: true },
-			},
-		],
+		gallery: {
+			type:Array
+		},
 		attachment: [
 			{
 				url: { type: String, trim: true },
@@ -72,7 +69,7 @@ const propertySchema = new mongoose.Schema(
 				},
 			},
 		],
-		agentId: { type: mongoose.Schema.Types.ObjectId },
+		agentId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 	},
 	{ timestamps: true },
 );

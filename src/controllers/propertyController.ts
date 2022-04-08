@@ -50,6 +50,12 @@ class Property {
 
 		res.send(appResponse("fetched properties successfully", getUserProperties));
 	}
+
+	async publicPropertiesHandler(req: Request, res: Response) {
+		const properties = await propertyService.publicProperties();
+
+		res.send(appResponse("fetched properties successfully", properties));
+	}
 }
 
 export default new Property();

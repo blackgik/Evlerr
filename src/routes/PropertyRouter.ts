@@ -42,5 +42,7 @@ export = function () {
 		propertyController.viewAllProperties,
 	);
 
+	router.get("/user/properties", propertyController.publicPropertiesHandler)
+
 	return router;
 };

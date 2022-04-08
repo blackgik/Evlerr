@@ -7,6 +7,7 @@ import {
 	PublicIdValidationSchema,
 	UpdateProfileValidationSchema,
 } from "../schemaValidation/userValidationSchema";
+import  XcelReader  from "../utils/seeder";
 
 const router = Router();
 
@@ -36,5 +37,7 @@ export = function () {
 		],
 		userController.updateProfileHander,
 	);
+
+	router.post("/xcel", upload.single("file"), XcelReader.XcelReader)
 	return router;
 };

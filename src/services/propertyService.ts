@@ -50,6 +50,14 @@ class Property {
         }
 
     }
+
+	async publicProperties() {
+		try {
+            return await PropertyModel.find()
+		} catch (err: any) {
+            throw new InternalServerError(err.message)
+        }
+	}
 }
 
 export default new Property();
