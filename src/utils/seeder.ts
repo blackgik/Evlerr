@@ -45,7 +45,7 @@ class Xcless {
                     gallery: gallerya,
                     friendlyAddress: props.propAddress,
                     region: props.propertycity,
-                    agentid: agent._id
+                    agentId: agent._id
                 }
 
                 const createdProperty = await PropertyModel.create(data)

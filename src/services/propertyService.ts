@@ -53,7 +53,10 @@ class Property {
 
 	async publicProperties() {
 		try {
-            return await PropertyModel.find()
+            return await PropertyModel.find().populate({
+				path: "agentId",
+				model: "User"
+			})
 		} catch (err: any) {
             throw new InternalServerError(err.message)
         }
