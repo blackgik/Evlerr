@@ -5,7 +5,7 @@ import {
 	InternalServerError,
 	InvalidError,
 	NotFoundError,
-	UnAuthorizedError,
+	UnAuthorizedError
 } from "../../lib/appErrors";
 import UserModel from "../models/UserModel";
 import { UserDocument } from "../interfaces/Iuser";
@@ -18,6 +18,7 @@ class User {
 				UserDocument,
 				| "updatedAt"
 				| "createdAt"
+				| "job"
 				| "comparePassword"
 				| "companyId"
 				| "isVerified"
@@ -32,7 +33,7 @@ class User {
 				| "socials"
 				| "country"
 			>
-		>,
+		>
 	) {
 		try {
 			return await UserModel.create(input);
@@ -41,15 +42,10 @@ class User {
 		}
 	}
 
-	async validatePassword({
-		email,
-		password,
-	}: {
-		email: string;
-		password: string;
-	}) {
+	async validatePassword({ email, password }: { email: string; password: string }) {
 		// we need to first find if the user exist;
 		const user = await UserModel.findOne({ email });
+		console.log(user)
 
 		if (!user) throw new InvalidError("Invalid User");
 

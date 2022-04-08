@@ -1,16 +1,10 @@
 import { Request, Response } from "express";
-import {
-	propertyIdInput,
-	propertyInput,
-} from "../schemaValidation/propertyVallidationSchema";
+import { propertyIdInput, propertyInput } from "../schemaValidation/propertyVallidationSchema";
 import propertyService from "../services/propertyService";
 import appResponse from "./../../lib/appResponse";
 
 class Property {
-	async submitPropetyHandler(
-		req: Request<{}, {}, propertyInput["body"]>,
-		res: Response,
-	) {
+	async submitPropetyHandler(req: Request<{}, {}, propertyInput["body"]>, res: Response) {
 		const user = res.locals.user;
 		const body = req.body;
 		const submittedProperty = await propertyService.submitPropety(user, body);
@@ -18,23 +12,17 @@ class Property {
 		res.send(appResponse("submitted propert successfuly", submittedProperty));
 	}
 
-	async deletePropertyHandler(
-		req: Request<propertyIdInput["params"]>,
-		res: Response,
-	) {
+	async deletePropertyHandler(req: Request<propertyIdInput["params"]>, res: Response) {
 		const { propertyId } = req.params;
 
 		const deletedProperty = await propertyService.deleteProperty({
-			_id: propertyId,
+			_id: propertyId
 		});
 
 		res.send(appResponse("deleted property successfully", deletedProperty));
 	}
 
-	async viewPropertyHandler(
-		req: Request<propertyIdInput["params"]>,
-		res: Response,
-	) {
+	async viewPropertyHandler(req: Request<propertyIdInput["params"]>, res: Response) {
 		const { propertyId } = req.params;
 
 		const property = await propertyService.viewProperty({ _id: propertyId });
@@ -45,7 +33,7 @@ class Property {
 	async viewAllProperties(req: Request, res: Response) {
 		const user = res.locals.user;
 		const getUserProperties = await propertyService.fetchUserProperties({
-			agentId: user._id,
+			agentId: user._id
 		});
 
 		res.send(appResponse("fetched properties successfully", getUserProperties));
@@ -55,6 +43,17 @@ class Property {
 		const properties = await propertyService.publicProperties();
 
 		res.send(appResponse("fetched properties successfully", properties));
+	}
+
+	async searchPropertyHandler(req: Request, res: Response) {
+		const { search } = req.body;
+		const query = typeof search !== "undefined" ? search.trim().toLowerCase() : false;
+		const rgx = (pattern: string) => new RegExp(`.*${pattern}.*`);
+		const searchRgx = rgx(query);
+
+		const foundProperties = await propertyService.searchProperty(searchRgx)
+
+		res.send(appResponse("fetched property in city successfully", foundProperties))
 	}
 }
 

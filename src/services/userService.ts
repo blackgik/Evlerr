@@ -1,12 +1,12 @@
 import { DocumentDefinition, FilterQuery } from "mongoose";
-import { UserDocument } from "../interfaces/Iuser";
+import { PasswordChangeDocument, UserDocument } from "../interfaces/Iuser";
 import { deleteFromCloud, uploadToCloud } from "../../lib/cloudinary";
+import { BadRequestError, InvalidError } from "../../lib/appErrors";
 class User {
 	async uploadPicture(path: string, user: any) {
 		const { secure_url, public_id } = await uploadToCloud(path);
 		if (secure_url && public_id) {
-			(user.profilePicture.url = secure_url),
-				(user.profilePicture.publicId = public_id);
+			(user.profilePicture.url = secure_url), (user.profilePicture.publicId = public_id);
 
 			await user.save();
 		}
@@ -38,6 +38,18 @@ class User {
 		if (secure_url && public_id) {
 			return { secure_url, public_id };
 		}
+	}
+
+	async updatePassword(user: UserDocument, body: PasswordChangeDocument) {
+		// confirm that passwords is correct first
+		const isMatch = await user.comparePassword(body.oldPassword);
+
+		if (!isMatch) throw new InvalidError("Old password is wrong");
+		if(await user.comparePassword(body.newPassword)) throw new BadRequestError("old password cannot be new password")
+		user.password = body.newPassword;
+		await user.save();
+
+		return user;
 	}
 }
 

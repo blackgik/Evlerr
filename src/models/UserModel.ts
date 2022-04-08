@@ -12,8 +12,9 @@ const userSchema = new mongoose.Schema<UserDocument>(
 		description: { type: String, trim: true, min: 3 },
 		profilePicture: {
 			url: { type: String, trim: true, min: 3 },
-			publicId: { type: String, trim: true, min: 3 },
+			publicId: { type: String, trim: true, min: 3 }
 		},
+		job: { type: String, trim: true },
 		web: { type: String, trim: true, min: 3 },
 		phone: { type: String, trim: true, min: 3 },
 		fax: { type: String, trim: true, min: 3 },
@@ -30,7 +31,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
 				if (value.includes("123")) {
 					throw new BadRequestError("password includes hackable characters");
 				}
-			},
+			}
 		},
 		email: {
 			type: String,
@@ -38,21 +39,20 @@ const userSchema = new mongoose.Schema<UserDocument>(
 			trim: true,
 			unique: true,
 			validate(value: string) {
-				if (!validator.isEmail(value))
-					throw new BadRequestError("value is not of Email type");
-			},
+				if (!validator.isEmail(value)) throw new BadRequestError("value is not of Email type");
+			}
 		},
 		role: { type: String, default: "user", enum: ["user", "agent", "agency"] },
-		companyId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+		companyId: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
 	},
-	{ timestamps: true },
+	{ timestamps: true }
 );
 
 userSchema.index({
 	email: "text",
 	username: "text",
 	companyId: "text",
-	isVerified: "text",
+	isVerified: "text"
 });
 
 userSchema.methods.toJSON = function () {
@@ -76,14 +76,10 @@ userSchema.pre("save", async function (next) {
 	return next();
 });
 
-userSchema.methods.comparePassword = async function (
-	candidatePassword: string,
-): Promise<Boolean> {
+userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<Boolean> {
 	const self = this as UserDocument;
 
-	return await bcrypt
-		.compare(candidatePassword, self.password)
-		.catch((e) => false);
+	return await bcrypt.compare(candidatePassword, self.password).catch((e) => false);
 };
 
 export default mongoose.model<UserDocument>("User", userSchema);

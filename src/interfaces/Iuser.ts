@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { StringifyOptions } from "querystring";
 
 export interface UserDocument extends mongoose.Document {
 	username: string;
@@ -8,6 +9,7 @@ export interface UserDocument extends mongoose.Document {
 	fullName: string;
 	description: string;
 	profilePicture: object;
+	job:string;
 	web: string;
 	phone: string;
 	fax: string;
@@ -20,4 +22,10 @@ export interface UserDocument extends mongoose.Document {
 	createdAt: Date;
 	updatedAt: Date;
 	comparePassword(candidatePassword: string): Promise<Boolean>;
+}
+
+export interface PasswordChangeDocument {
+	oldPassword: string;
+	newPassword: string;
+	confirmPassword:string
 }

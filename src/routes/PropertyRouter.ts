@@ -4,7 +4,7 @@ import { authentication, authFunctions } from "../middlewares/Auth";
 import propertyController from "../controllers/propertyController";
 import {
 	NewPropertySchema,
-	PropertyIdSchemaValidation,
+	PropertyIdSchemaValidation
 } from "../schemaValidation/propertyVallidationSchema";
 import { upload } from "./../../lib/multer";
 import userController from "../controllers/userController";
@@ -15,34 +15,27 @@ export = function () {
 	router.post(
 		"/user/pproperty/new",
 		[validateResource(NewPropertySchema), authentication, authFunctions],
-		propertyController.submitPropetyHandler,
+		propertyController.submitPropetyHandler
 	);
-	router.post(
-		"/media-uploader",
-		upload.single("photo"),
-		userController.MediaUploader,
-	);
+	router.post("/media-uploader", upload.single("photo"), userController.MediaUploader);
 	router.get(
 		"/user/view-property/:propertyId",
 		validateResource(PropertyIdSchemaValidation),
-		propertyController.viewPropertyHandler,
+		propertyController.viewPropertyHandler
 	);
 	router.delete(
 		"/user/delete-property/:propertyId",
-		[
-			validateResource(PropertyIdSchemaValidation),
-			authentication,
-			authFunctions,
-		],
-		propertyController.deletePropertyHandler,
+		[validateResource(PropertyIdSchemaValidation), authentication, authFunctions],
+		propertyController.deletePropertyHandler
 	);
 	router.get(
 		"/user/view-properties",
 		[authentication, authFunctions],
-		propertyController.viewAllProperties,
+		propertyController.viewAllProperties
 	);
 
-	router.get("/user/properties", propertyController.publicPropertiesHandler)
+	router.get("/user/properties", propertyController.publicPropertiesHandler);
+	router.get("/search-property", propertyController.searchPropertyHandler)
 
 	return router;
 };
