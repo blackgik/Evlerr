@@ -5,7 +5,7 @@ type PartialBy<T, K extends keyof T> = Omitt<T, K> & Partial<Pick<T, K>>;
 
 export interface PropertyDocument extends mongoose.Document {
 	propertyTitle: string | undefined;
-	propertyType?: string | undefined ;
+	propertyType?: string | undefined;
 	propertyDescription?: string | undefined;
 	propertyId?: string | undefined;
 	parentProperty?: string | undefined;
@@ -30,13 +30,10 @@ export interface PropertyDocument extends mongoose.Document {
 	longtitude?: string | undefined;
 	latitude?: string | undefined;
 	featuredImage?: {
-        url?: string | undefined;
-		publicId?: string | undefined;
-    };
-	gallery?: {
 		url?: string | undefined;
 		publicId?: string | undefined;
-	}[];
+	};
+	gallery?: string[];
 
 	attachment?: {
 		url?: string | undefined;
@@ -79,7 +76,7 @@ export interface PropertyDocument extends mongoose.Document {
 // 	| "yearBuilt"| "homeArea"| "energyClass"| "energyIndex"
 // 	| "price"| "pricePrefix"| "priceSuffix"| "priceCustom"
 // 	| "region"| "friendlyAddress"| "longtitude"| "latitude"
-// 	| "featuredImage"| "mapLocation"| "gallery" | "attachment" 
-//     | "videoLink" | "amenities"| "facilities" | "valuation" 
+// 	| "featuredImage"| "mapLocation"| "gallery" | "attachment"
+//     | "videoLink" | "amenities"| "facilities" | "valuation"
 //     | "agentId"| "createdAt"| "updatedAt"
 // >;

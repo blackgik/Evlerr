@@ -1,3 +1,4 @@
 /node_modules
 .env
 /src/utils/sedder.ts
+/uploads

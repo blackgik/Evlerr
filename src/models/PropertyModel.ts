@@ -31,30 +31,30 @@ const propertySchema = new mongoose.Schema(
 		latitude: { type: String, trim: true },
 		featuredImage: {
 			url: { type: String, trim: true },
-			publicId: { type: String, trim: true },
+			publicId: { type: String, trim: true }
 		},
 		gallery: {
-			type:Array
+			type: Array
 		},
 		attachment: [
 			{
 				url: { type: String, trim: true },
-				publicId: { type: String, trim: true },
-			},
+				publicId: { type: String, trim: true }
+			}
 		],
 		videoLink: { type: String, trim: true },
 		amenities: [{ type: String, trim: true }],
 		facilities: [
 			{
 				key: { type: String, trim: true },
-				value: { type: String, trim: true },
-			},
+				value: { type: String, trim: true }
+			}
 		],
 		valuation: [
 			{
 				key: { type: String, trim: true },
-				value: { type: String, trim: true },
-			},
+				value: { type: String, trim: true }
+			}
 		],
 		floors: [
 			{
@@ -65,20 +65,20 @@ const propertySchema = new mongoose.Schema(
 				content: { type: String, trim: true },
 				previewImage: {
 					url: { type: String, trim: true },
-					publicId: { type: String, trim: true },
-				},
-			},
+					publicId: { type: String, trim: true }
+				}
+			}
 		],
-		agentId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+		agentId: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
 	},
-	{ timestamps: true },
+	{ timestamps: true }
 );
 
 propertySchema.index({
 	_id: "text",
 	propertyType: "text",
 	label: "text",
-	price: "text",
+	price: "text"
 });
 
 export default mongoose.model<PropertyDocument>("Property", propertySchema);

@@ -12,15 +12,19 @@ type msgData = {
 	html: string;
 };
 
-async function emailVerification(email: string, subject: string, token: string) {
+async function emailVerification(
+	email: string,
+	subject: string,
+	token: string
+) {
 	const msg: msgData = {
 		to: email,
 		from: config.get<string>("emailSender"),
 		subject,
-		text: `HELLO THERE,\n please, kindly copy the link below to verify your email\n\n http://localhost:3000/api/v1/auth/verfity-token?token=${token}`,
+		text: `HELLO THERE,\n please, kindly copy the link below to verify your email\n\n https://nervous-elion-c82a1c.netlify.app/verified?token=${token}`,
 		html: `<strong>Hello There,</strong>
-               <p>please, kindly click <a href="http://localhost:3000/api/v1/auth/verfity-token?token=${token}"><b>here<b></a> to verify account </p><br>
-               <p>you can also copy this link and post on your browser<em>http://localhost:3000/api/v1/auth/verfity-token?token=${token}<em></p>`
+               <p>please, kindly click <a href="https://nervous-elion-c82a1c.netlify.app/verified?token=${token}"><b>here<b></a> to verify account </p><br>
+               <p>you can also copy this link and post on your browser<em>https://nervous-elion-c82a1c.netlify.app/verified?token=${token}<em></p>`
 	};
 
 	try {
@@ -31,7 +35,11 @@ async function emailVerification(email: string, subject: string, token: string) 
 	}
 }
 
-async function passwordValidationMail(email: string, subject: string, token: string) {
+async function passwordValidationMail(
+	email: string,
+	subject: string,
+	token: string
+) {
 	const msg: msgData = {
 		to: email,
 		from: config.get<string>("emailSender"),
@@ -58,7 +66,6 @@ async function agentSupportMail(
 	name: string,
 	sender: string
 ) {
-	
 	const msg: msgData = {
 		to: email,
 		from: config.get<string>("emailSender"),
@@ -85,10 +92,10 @@ async function agentSupportMail(
 	try {
 		await sgMail.send(msg);
 		logger.info("Email sent successfully");
-		return true
+		return true;
 	} catch (err: any) {
 		logger.error(err);
-		return false
+		return false;
 	}
 }
 
