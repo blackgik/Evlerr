@@ -48,7 +48,7 @@ class Property {
 	async searchPropertyHandler(req: Request, res: Response) {
 		const { search } = req.body;
 		const query = typeof search !== "undefined" ? search.trim().toLowerCase() : false;
-		const rgx = (pattern: string) => new RegExp(`.*${pattern}.*`);
+		const rgx = (pattern: string) => new RegExp(`${pattern}`, `i`);
 		const searchRgx = rgx(query);
 
 		const foundProperties = await propertyService.searchProperty(searchRgx)

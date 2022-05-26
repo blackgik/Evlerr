@@ -76,11 +76,11 @@ class Property {
 			{
 				$match: {
 					$or: [
-						{ region: search },
-						{ rooms: search },
-						{ propertyType: search },
-						{ propertyTitle: search },
-						{propertyType:search}
+						{ region: { $regex: search } },
+						{ rooms: { $regex: search } },
+						{ propertyType: { $regex: search } },
+						{ propertyTitle: { $regex: search} },
+						{propertyType: { $regex: search } }
 					]
 				}
 			}
