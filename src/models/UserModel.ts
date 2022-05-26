@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
 		fax: { type: String, trim: true, min: 3 },
 		friendlyAddress: { type: String, trim: true, min: 3 },
 		mapLocation: { type: String, trim: true, min: 3 },
-		socials: [{ type: String }],
+		socials: [],
 		country: { type: String, trim: true, min: 3 },
 		isVerified: { type: Boolean, default: false },
 		password: {
@@ -82,4 +82,4 @@ userSchema.methods.comparePassword = async function (candidatePassword: string):
 	return await bcrypt.compare(candidatePassword, self.password).catch((e) => false);
 };
 
-export default mongoose.model<UserDocument>("User", userSchema);
+export default mongoose.model<UserDocument>("User", userSchema)

@@ -21,7 +21,12 @@ export const UpdateProfileValidationSchema = object({
 		fax: string().optional(),
 		friendlyAddress: string().optional(),
 		mapLocation: string().optional(),
-		socials: string().array().optional(),
+		socials: object({
+			name: string().optional(),
+			url: string().optional(),
+		})
+			.array()
+			.optional(),
 		country: string().optional(),
 		isVerified: string().optional()
 	})
