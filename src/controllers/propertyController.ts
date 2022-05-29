@@ -47,11 +47,28 @@ class Property {
 
 	async searchPropertyHandler(req: Request, res: Response) {
 		const { search } = req.body;
+		let advSearch = req.query, queryPattern: string = "";
+
+		// preprocess advanced search queries
+		if (Object.keys(advSearch).includes("filter-amenity")
+			&& Array.isArray(advSearch["filter-amenity"])) {
+			advSearch["filter-amenity"] = advSearch["filter-amenity"]?.join("|");
+		
+			let advSearchValues = Object.values(advSearch);
+			if (Array.isArray(advSearchValues)){
+				advSearchValues = advSearchValues.filter(e => {
+					return e !== '';
+				});
+				queryPattern = advSearchValues.join("|").trim().toLowerCase();
+			}
+		}
+
 		const query = typeof search !== "undefined" ? search.trim().toLowerCase() : false;
 		const rgx = (pattern: string) => new RegExp(`${pattern}`, `gi`);
-		const searchRgx = rgx(query);
+		const searchRgx = rgx(query), filterRgx = rgx(queryPattern);
+		console.log(filterRgx);
 
-		const foundProperties = await propertyService.searchProperty(searchRgx)
+		const foundProperties = await propertyService.searchProperty(searchRgx, filterRgx)
 
 		res.send(appResponse("fetched property in city successfully", foundProperties))
 	}

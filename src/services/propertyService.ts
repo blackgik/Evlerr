@@ -87,7 +87,7 @@ class Property {
 		}
 	}
 
-	async searchProperty(search: any) {
+	async searchProperty(search: any, filter: any) {
 		console.log(search);
 		const property = await PropertyModel.aggregate([
 			{
@@ -110,7 +110,19 @@ class Property {
 						{ rooms: { $regex: search } },
 						{ propertyType: { $regex: search } },
 						{ propertyTitle: { $regex: search} },
-						{propertyType: { $regex: search } }
+						{ propertyType: { $regex: search } },
+						// advanced filter
+						{ amenities: { $regex: filter } },
+						{ mapLocation: { $regex: filter } },
+						{ bed: { $regex: filter } },
+						{ bath: { $regex: filter } },
+						{ region: { $regex: filter } },
+						{ floors: { $regex: filter } },
+						{ rooms: { $regex: filter } },
+						{ homeArea: { $regex: filter } },
+						{ price: { $regex: filter } },
+						{ garage: { $regex: filter } },
+						{ status: { $regex: filter } }
 					]
 				}
 			}
