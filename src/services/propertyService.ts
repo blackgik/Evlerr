@@ -1,9 +1,9 @@
-import { get } from "lodash";
+import { get, sortBy } from "lodash";
 import { DocumentDefinition, FilterQuery } from "mongoose";
 import PropertyModel from "../models/PropertyModel";
 import { InternalServerError } from "../../lib/appErrors";
 import { PropertyDocument } from "./../interfaces/Iproperty";
-import { query } from "express";
+import { Request, query } from "express";
 
 class Property {
 	async submitPropety(
@@ -38,28 +38,72 @@ class Property {
 		}
 	}
 
-	async fetchUserProperties(query: FilterQuery<PropertyDocument>) {
+	async fetchUserProperties(query: FilterQuery<PropertyDocument>, req: Request) {
+		
 		try {
-			return await PropertyModel.find(query);
+			// define pagination options
+			const page = req.query?.page || 1,
+				  limit = req.query?.limit || 10;
+
+			let orderBy = req.query?.orderBy || "default";
+			if (String(orderBy).toLowerCase() === "newest") orderBy = "-createdAt";
+
+			const options = {
+				page: Number(page),
+				limit: Number(limit),
+				sort: orderBy
+			};
+			// return await PropertyModel.find(query);
+			let result = await PropertyModel.paginate({query}, options);
+			return result;
 		} catch (err: any) {
 			throw new InternalServerError(err.message);
 		}
 	}
 
-	async publicProperties() {
+	async publicProperties(req: Request) {
 		try {
-			return await PropertyModel.find().populate({
-				path: "agentId",
-				model: "User"
-			});
+			// return await PropertyModel.find().populate({
+			// 	path: "agentId",
+			// 	model: "User"
+			// });
+			// define pagination options
+			const page = req.query?.page || 1,
+				  limit = req.query?.limit || 10;
+
+			const options = {
+				page: Number(page),
+				limit: Number(limit),
+				populate: {
+					path: "agentId",
+					model: "User"
+				}
+			};
+			// return await PropertyModel.find(query);
+			let result = await PropertyModel.paginate({}, options);
+			return result;
 		} catch (err: any) {
 			throw new InternalServerError(err.message);
 		}
 	}
 
-	async searchProperty(search: any) {
+	async searchProperty(search: any, filter: any, query: any) {
 		console.log(search);
-		const property = await PropertyModel.aggregate([
+		// define pagination options
+		const page = query?.page || 1,
+		limit = query?.limit || 10;
+
+		let orderBy = query?.orderBy || "default";
+		if (String(orderBy).toLowerCase() === "newest") orderBy = "-createdAt";
+		if (String(orderBy).toLowerCase() === "price-lowest") orderBy = "-price";
+		if (String(orderBy).toLowerCase() === "price-highest") orderBy = "price";
+
+		const options = {
+			page: Number(page),
+			limit: Number(limit),
+			sort: orderBy
+		};
+		const property = await PropertyModel.paginate(PropertyModel.aggregate([
 			{
 				$lookup: {
 					from: "users",
@@ -80,14 +124,37 @@ class Property {
 						{ rooms: { $regex: search } },
 						{ propertyType: { $regex: search } },
 						{ propertyTitle: { $regex: search} },
-						{propertyType: { $regex: search } }
+						{ propertyType: { $regex: search } },
+						// advanced filter
+						{ amenities: { $regex: filter } },
+						{ mapLocation: { $regex: filter } },
+						{ bed: { $regex: filter } },
+						{ bath: { $regex: filter } },
+						{ region: { $regex: filter } },
+						{ floors: { $regex: filter } },
+						{ rooms: { $regex: filter } },
+						{ homeArea: { $regex: filter } },
+						{ price: { $regex: filter } },
+						{ garage: { $regex: filter } },
+						{ status: { $regex: filter } }
 					]
 				}
 			}
-		]);
+		]), options);
 
 		return property;
 	}
+	
+	orderDocument(a: PropertyDocument, b: PropertyDocument): number {
+		let ans: number = 0;
+		if (a.createdAt && b.createdAt){
+			console.log("here")
+			ans = b?.createdAt.getTime() - a?.createdAt.getTime();
+			console.log(ans)
+		}
+		
+		return ans;
+	}
 }
 
-export default new Property();
+export default new Property()
