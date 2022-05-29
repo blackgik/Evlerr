@@ -40,7 +40,7 @@ class Property {
 	}
 
 	async publicPropertiesHandler(req: Request, res: Response) {
-		const properties = await propertyService.publicProperties();
+		const properties = await propertyService.publicProperties(req);
 
 		res.send(appResponse("fetched properties successfully", properties));
 	}

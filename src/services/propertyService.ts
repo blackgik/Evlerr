@@ -61,12 +61,27 @@ class Property {
 		}
 	}
 
-	async publicProperties() {
+	async publicProperties(req: Request) {
 		try {
-			return await PropertyModel.find().populate({
-				path: "agentId",
-				model: "User"
-			});
+			// return await PropertyModel.find().populate({
+			// 	path: "agentId",
+			// 	model: "User"
+			// });
+			// define pagination options
+			const page = req.query?.page || 1,
+				  limit = req.query?.limit || 10;
+
+			const options = {
+				page: Number(page),
+				limit: Number(limit),
+				populate: {
+					path: "agentId",
+					model: "User"
+				}
+			};
+			// return await PropertyModel.find(query);
+			let result = await PropertyModel.paginate({}, options);
+			return result;
 		} catch (err: any) {
 			throw new InternalServerError(err.message);
 		}
