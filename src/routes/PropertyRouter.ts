@@ -4,7 +4,8 @@ import { authentication, authFunctions } from "../middlewares/Auth";
 import propertyController from "../controllers/propertyController";
 import {
 	NewPropertySchema,
-	PropertyIdSchemaValidation
+	PropertyIdSchemaValidation,
+	propertySearchStringSchema
 } from "../schemaValidation/propertyVallidationSchema";
 import { upload } from "./../../lib/multer";
 import userController from "../controllers/userController";
@@ -35,7 +36,7 @@ export = function () {
 	);
 
 	router.get("/user/properties", propertyController.publicPropertiesHandler);
-	router.get("/search-property", propertyController.searchPropertyHandler)
+	router.get("/search-property", validateResource(propertySearchStringSchema),propertyController.searchPropertyHandler)
 
 	return router;
 };
