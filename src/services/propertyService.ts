@@ -87,9 +87,23 @@ class Property {
 		}
 	}
 
-	async searchProperty(search: any, filter: any) {
+	async searchProperty(search: any, filter: any, query: any) {
 		console.log(search);
-		const property = await PropertyModel.aggregate([
+		// define pagination options
+		const page = query?.page || 1,
+		limit = query?.limit || 10;
+
+		let orderBy = query?.orderBy || "default";
+		if (String(orderBy).toLowerCase() === "newest") orderBy = "-createdAt";
+		if (String(orderBy).toLowerCase() === "price-lowest") orderBy = "-price";
+		if (String(orderBy).toLowerCase() === "price-highest") orderBy = "price";
+
+		const options = {
+			page: Number(page),
+			limit: Number(limit),
+			sort: orderBy
+		};
+		const property = await PropertyModel.paginate(PropertyModel.aggregate([
 			{
 				$lookup: {
 					from: "users",
@@ -126,7 +140,7 @@ class Property {
 					]
 				}
 			}
-		]);
+		]), options);
 
 		return property;
 	}

@@ -68,7 +68,7 @@ class Property {
 		const searchRgx = rgx(query), filterRgx = rgx(queryPattern);
 		console.log(filterRgx);
 
-		const foundProperties = await propertyService.searchProperty(searchRgx, filterRgx)
+		const foundProperties = await propertyService.searchProperty(searchRgx, filterRgx, req.query);
 
 		res.send(appResponse("fetched property in city successfully", foundProperties))
 	}
