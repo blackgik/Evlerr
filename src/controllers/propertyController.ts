@@ -34,7 +34,7 @@ class Property {
 		const user = res.locals.user;
 		const getUserProperties = await propertyService.fetchUserProperties({
 			agentId: user._id
-		});
+		}, req);
 
 		res.send(appResponse("fetched properties successfully", getUserProperties));
 	}
@@ -48,7 +48,7 @@ class Property {
 	async searchPropertyHandler(req: Request, res: Response) {
 		const { search } = req.body;
 		const query = typeof search !== "undefined" ? search.trim().toLowerCase() : false;
-		const rgx = (pattern: string) => new RegExp(`${pattern}`, `i`);
+		const rgx = (pattern: string) => new RegExp(`${pattern}`, `gi`);
 		const searchRgx = rgx(query);
 
 		const foundProperties = await propertyService.searchProperty(searchRgx)

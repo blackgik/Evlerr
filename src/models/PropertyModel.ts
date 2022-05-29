@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
+import { PaginateModel } from "mongoose";
 import config from "config";
 import { PropertyDocument } from "../interfaces/Iproperty";
+import paginate from "mongoose-paginate-v2";
 
 const propertySchema = new mongoose.Schema(
 	{
@@ -74,6 +76,10 @@ const propertySchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
+// plugin paginate
+propertySchema.plugin(paginate);
+
+
 propertySchema.index({
 	_id: "text",
 	propertyType: "text",
@@ -81,4 +87,7 @@ propertySchema.index({
 	price: "text"
 });
 
-export default mongoose.model<PropertyDocument>("Property", propertySchema);
+// add pagination to exported model
+export default mongoose.model<
+	PropertyDocument,
+	PaginateModel<PropertyDocument>>("Property", propertySchema);

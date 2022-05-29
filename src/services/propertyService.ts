@@ -1,9 +1,9 @@
-import { get } from "lodash";
+import { get, sortBy } from "lodash";
 import { DocumentDefinition, FilterQuery } from "mongoose";
 import PropertyModel from "../models/PropertyModel";
 import { InternalServerError } from "../../lib/appErrors";
 import { PropertyDocument } from "./../interfaces/Iproperty";
-import { query } from "express";
+import { Request, query } from "express";
 
 class Property {
 	async submitPropety(
@@ -38,9 +38,24 @@ class Property {
 		}
 	}
 
-	async fetchUserProperties(query: FilterQuery<PropertyDocument>) {
+	async fetchUserProperties(query: FilterQuery<PropertyDocument>, req: Request) {
+		
 		try {
-			return await PropertyModel.find(query);
+			// define pagination options
+			const page = req.query?.page || 1,
+				  limit = req.query?.limit || 10;
+
+			let orderBy = req.query?.orderBy || "default";
+			if (String(orderBy).toLowerCase() === "newest") orderBy = "-createdAt";
+
+			const options = {
+				page: Number(page),
+				limit: Number(limit),
+				sort: orderBy
+			};
+			// return await PropertyModel.find(query);
+			let result = await PropertyModel.paginate({query}, options);
+			return result;
 		} catch (err: any) {
 			throw new InternalServerError(err.message);
 		}
@@ -88,6 +103,17 @@ class Property {
 
 		return property;
 	}
+	
+	orderDocument(a: PropertyDocument, b: PropertyDocument): number {
+		let ans: number = 0;
+		if (a.createdAt && b.createdAt){
+			console.log("here")
+			ans = b?.createdAt.getTime() - a?.createdAt.getTime();
+			console.log(ans)
+		}
+		
+		return ans;
+	}
 }
 
-export default new Property();
+export default new Property()
