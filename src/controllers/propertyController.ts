@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
 	propertyIdInput,
 	propertyInput,
-	propertySerachsString
+	propertySearchString
 } from "../schemaValidation/propertyVallidationSchema";
 import propertyService from "../services/propertyService";
 import appResponse from "./../../lib/appResponse";
@@ -61,7 +61,7 @@ class Property {
 		res.send(appResponse("fetched properties successfully", properties));
 	}
 
-	async searchPropertyHandler(req: Request<{}, {},{}, propertySerachsString["query"]>, res: Response) {
+	async searchPropertyHandler(req: Request<{}, {},{}, propertySearchString["query"]>, res: Response) {
 		const { search }= req.query;
 		let advSearch:any = req.query,
 			queryPattern: string = "";

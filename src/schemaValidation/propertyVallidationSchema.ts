@@ -85,4 +85,4 @@ export const propertySearchStringSchema = object({
 
 export type propertyIdInput = TypeOf<typeof PropertyIdSchemaValidation>
 export type propertyInput = TypeOf<typeof NewPropertySchema>;
-export type propertySerachsString = TypeOf<typeof propertySearchStringSchema>
+export type propertySearchString = TypeOf<typeof propertySearchStringSchema>
