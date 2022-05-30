@@ -32,6 +32,12 @@ export const UpdateProfileValidationSchema = object({
 	})
 });
 
+export const userSearchSchema = object({
+	query: object({
+		role: string().optional()
+	})
+});
+
 export const passwordUpdate = object({
 	body: object({
 		oldPassword: string({
@@ -73,4 +79,5 @@ export type newPasswordInput = TypeOf<typeof passwordUpdate>
 export type publicIdString = TypeOf<typeof PublicIdValidationSchema>;
 export type updateInput = TypeOf<typeof UpdateProfileValidationSchema>;
 export type agentSupportInput = TypeOf<typeof agentSupportSchema>;
+export type userSearchInput = TypeOf<typeof userSearchSchema>;
 
