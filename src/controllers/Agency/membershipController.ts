@@ -24,10 +24,10 @@ class Membership {
 	}
 
 	async searchMemberHandler(
-		req: Request<{}, {}, SearchInput["body"]>,
+		req: Request<{}, {}, SearchInput["query"]>,
 		res: Response
 	) {
-		const { name } = req.body;
+		const { name } = req.query;
 
         const searchResult = await membershipService.searchMember(name)
 

@@ -9,7 +9,7 @@ export const AddMemberSchema = object({
 });
 
 export const memberSearchSchema = object({
-	body: object({
+	query: object({
 		name: string({
 			required_error: "Missing required Member name"
 		})
