@@ -77,9 +77,10 @@ export const PropertyIdSchemaValidation = object({
 
 export const propertySearchStringSchema = object({
 	query:object({
-		search:string({
-			required_error: "search string is required"
-		})
+		// search:string({
+		// 	required_error: "search string is required"
+		// })
+		search: string().optional()
 	})
 })
 

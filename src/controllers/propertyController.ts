@@ -63,6 +63,7 @@ class Property {
 
 	async searchPropertyHandler(req: Request<{}, {},{}, propertySearchString["query"]>, res: Response) {
 		const { search }= req.query;
+		delete req.query?.search;
 		let advSearch:any = req.query,
 			queryPattern: string = "";
 
@@ -83,10 +84,12 @@ class Property {
 		}
 
 		const query =
-			typeof search !== "undefined" ? search.trim().toLowerCase() : "";
+			typeof search !== "undefined" ? search.trim().toLowerCase() : ".*(?:)";
+		queryPattern = queryPattern === "" ? ".*(?:)" : queryPattern;
 		const rgx = (pattern: string) => new RegExp(`${pattern}`, `gi`);
 		const searchRgx = rgx(query),
 			filterRgx = rgx(queryPattern);
+		console.log(filterRgx)
 
 		const foundProperties = await propertyService.searchProperty(
 			searchRgx,
