@@ -92,7 +92,6 @@ class Property {
 		// define pagination options
 		const page = Number(query?.page) || 1,
 			limit = Number(query?.limit) || 10;
-		console.log(page, typeof page)
 
 		let orderBy = query?.orderBy || "oldest", sortBy = {};
 		if (String(orderBy).toLowerCase() === "newest") sortBy = { createdAt: -1 };
@@ -100,11 +99,6 @@ class Property {
 		if (String(orderBy).toLowerCase() === "price-highest") sortBy = { price: 1 };
 		else sortBy = { createdAt: 1 };
 
-		const options = {
-			page: Number(page),
-			limit: Number(limit),
-			sort: orderBy
-		};
 		const property = await PropertyModel.aggregate([
 			{
 				$lookup: {
@@ -168,9 +162,6 @@ class Property {
 				}
 			}
 		]);
-		// .skip( page > 0 ? ( ( page - 1 ) * limit ) : 0 )
-		// .limit( limit ); // PropertyModel.paginate(, options);
-		console.log(property[0].pageInfo);
 		const total = property[0].pageInfo[0].count,
 			pages = Math.ceil(total / limit),
 			result = {
@@ -183,17 +174,6 @@ class Property {
 				hasNextPage: page < pages
 			};
 		return result;
-	}
-	
-	orderDocument(a: PropertyDocument, b: PropertyDocument): number {
-		let ans: number = 0;
-		if (a.createdAt && b.createdAt){
-			console.log("here")
-			ans = b?.createdAt.getTime() - a?.createdAt.getTime();
-			console.log(ans)
-		}
-		
-		return ans;
 	}
 }
 
