@@ -1,4 +1,6 @@
 import { DocumentDefinition, FilterQuery } from "mongoose";
+import UserModel from "../models/UserModel";
+import { InternalServerError } from "../../lib/appErrors";
 import { PasswordChangeDocument, UserDocument } from "../interfaces/Iuser";
 import { deleteFromCloud, uploadToCloud } from "../../lib/cloudinary";
 import { BadRequestError, InvalidError } from "../../lib/appErrors";
@@ -50,6 +52,14 @@ class User {
 		await user.save();
 
 		return user;
+	}
+
+	async getUsers(role: any) {
+		try {
+			return await UserModel.find({ role });
+		} catch (err: any) {
+			throw new InternalServerError(err.message);
+		}
 	}
 }
 

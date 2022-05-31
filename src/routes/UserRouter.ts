@@ -7,7 +7,8 @@ import {
 	agentSupportSchema,
 	passwordUpdate,
 	PublicIdValidationSchema,
-	UpdateProfileValidationSchema
+	UpdateProfileValidationSchema,
+	userSearchSchema
 } from "../schemaValidation/userValidationSchema";
 import XcelReader from "../utils/seeder";
 
@@ -44,5 +45,11 @@ export = function () {
 	);
 
 	router.post("/xcel", upload.single("file"), XcelReader.XcelReader);
+	router.get(
+		"/user/get-users",
+		validateResource(userSearchSchema),
+		userController.getUserHandler
+	);
+	
 	return router;
 };

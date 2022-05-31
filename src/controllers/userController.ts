@@ -4,7 +4,8 @@ import {
 	agentSupportInput,
 	newPasswordInput,
 	publicIdString,
-	updateInput
+	updateInput,
+	userSearchInput
 } from "../schemaValidation/userValidationSchema";
 import userService from "../services/userService";
 import appResponse from "./../../lib/appResponse";
@@ -67,6 +68,17 @@ class User {
 		if (!sent) throw new InternalServerError("could not deliver message, try again")
 
 		res.send(appResponse("sent message successfully", sent))
+	}
+
+	async getUserHandler(
+		req: Request<userSearchInput["query"]>,
+		res: Response
+	) {
+		const role = req.query?.role || "user";
+
+        const result = await userService.getUsers(role);
+
+        res.send(appResponse(`found ${role} successfully`, result));
 	}
 }
 

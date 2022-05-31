@@ -77,12 +77,13 @@ export const PropertyIdSchemaValidation = object({
 
 export const propertySearchStringSchema = object({
 	query:object({
-		search:string({
-			required_error: "search string is required"
-		})
+		// search:string({
+		// 	required_error: "search string is required"
+		// })
+		search: string().optional()
 	})
 })
 
 export type propertyIdInput = TypeOf<typeof PropertyIdSchemaValidation>
 export type propertyInput = TypeOf<typeof NewPropertySchema>;
-export type propertySerachsString = TypeOf<typeof propertySearchStringSchema>
+export type propertySearchString = TypeOf<typeof propertySearchStringSchema>
