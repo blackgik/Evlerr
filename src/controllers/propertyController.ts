@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import {
+	agentQuery,
 	propertyIdInput,
 	propertyInput,
-	propertySearchString
+	searchString
 } from "../schemaValidation/propertyVallidationSchema";
 import propertyService from "../services/propertyService";
 import appResponse from "./../../lib/appResponse";
@@ -61,7 +62,7 @@ class Property {
 		res.send(appResponse("fetched properties successfully", properties));
 	}
 
-	async searchPropertyHandler(req: Request<{}, {},{}, propertySearchString["query"]>, res: Response) {
+	async searchPropertyHandler(req: Request<{}, {},{}, searchString["query"]>, res: Response) {
 		const { search }= req.query;
 		delete req.query?.search;
 		let advSearch:any = req.query,
@@ -100,6 +101,18 @@ class Property {
 		res.send(
 			appResponse("fetched property in city successfully", foundProperties)
 		);
+	}
+
+	async viewAgentProperties(req: Request<agentQuery["query"]>, res: Response) {
+		const { agentId } = req.query;
+		const getUserProperties = await propertyService.fetchAgentProperties(
+			{
+				agentId
+			},
+			req
+		);
+
+		res.send(appResponse("fetched properties successfully", getUserProperties));
 	}
 }
 

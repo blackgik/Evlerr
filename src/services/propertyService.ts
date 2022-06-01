@@ -47,7 +47,7 @@ class Property {
 			const page = req.query?.page || 1,
 				  limit = req.query?.limit || 10;
 
-			let orderBy = req.query?.orderBy || "default";
+			let orderBy = req.query?.orderBy || "createdAt";
 			if (String(orderBy).toLowerCase() === "newest") orderBy = "-createdAt";
 
 			const options = {
@@ -56,7 +56,7 @@ class Property {
 				sort: orderBy
 			};
 			// return await PropertyModel.find(query);
-			let result = await PropertyModel.paginate({query}, options);
+			let result = await PropertyModel.paginate(query, options);
 			return result;
 		} catch (err: any) {
 			throw new InternalServerError(err.message);
@@ -73,13 +73,17 @@ class Property {
 			const page = req.query?.page || 1,
 				  limit = req.query?.limit || 10;
 
+			let orderBy = req.query?.orderBy || "createdAt";
+			if (String(orderBy).toLowerCase() === "newest") orderBy = "-createdAt";
+
 			const options = {
 				page: Number(page),
 				limit: Number(limit),
 				populate: {
 					path: "agentId",
 					model: "User"
-				}
+				},
+				sort: orderBy
 			};
 			// return await PropertyModel.find(query);
 			let result = await PropertyModel.paginate({}, options);
@@ -176,6 +180,29 @@ class Property {
 				hasNextPage: page < pages
 			};
 		return result;
+	}
+
+	async fetchAgentProperties(query: FilterQuery<PropertyDocument>, req: Request) {
+		
+		try {
+			// define pagination options
+			const page = req.query?.page || 1,
+				  limit = req.query?.limit || 10;
+
+			let orderBy = req.query?.orderBy || "createdAt";
+			if (String(orderBy).toLowerCase() === "newest") orderBy = "-createdAt";
+
+			const options = {
+				page: Number(page),
+				limit: Number(limit),
+				sort: orderBy
+			};
+			// return await PropertyModel.find(query);
+			let result = await PropertyModel.paginate(query, options);
+			return result;
+		} catch (err: any) {
+			throw new InternalServerError(err.message);
+		}
 	}
 }
 

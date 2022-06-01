@@ -3,9 +3,10 @@ import validateResource from "../middlewares/validateResource";
 import { authentication, authFunctions } from "../middlewares/Auth";
 import propertyController from "../controllers/propertyController";
 import {
+	AgentQuerySchema,
 	NewPropertySchema,
 	PropertyIdSchemaValidation,
-	propertySearchStringSchema
+	PropertySearchStringSchema
 } from "../schemaValidation/propertyVallidationSchema";
 import { upload } from "./../../lib/multer";
 import userController from "../controllers/userController";
@@ -36,7 +37,11 @@ export = function () {
 	);
 
 	router.get("/user/properties", propertyController.publicPropertiesHandler);
-	router.get("/search-property", validateResource(propertySearchStringSchema),propertyController.searchPropertyHandler)
-
+	router.get("/search-property", validateResource(PropertySearchStringSchema),propertyController.searchPropertyHandler)
+	router.get(
+		"/user/get-agent-properties",
+		[validateResource(AgentQuerySchema), authentication, authFunctions],
+		propertyController.viewAgentProperties
+	);
 	return router;
 };
