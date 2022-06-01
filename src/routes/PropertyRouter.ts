@@ -4,6 +4,7 @@ import { authentication, authFunctions } from "../middlewares/Auth";
 import propertyController from "../controllers/propertyController";
 import {
 	AgentQuerySchema,
+	MediaPropSchema,
 	NewPropertySchema,
 	PropertyIdSchemaValidation,
 	PropertySearchStringSchema
@@ -42,6 +43,12 @@ export = function () {
 		"/user/get-agent-properties",
 		[validateResource(AgentQuerySchema), authentication, authFunctions],
 		propertyController.viewAgentProperties
+	);
+
+	router.post(
+		"/user/media-upload",
+		[validateResource(MediaPropSchema), upload.array("photo", 5), authentication, authFunctions],
+		propertyController.mediaUploader
 	);
 	return router;
 };

@@ -1,9 +1,10 @@
-import { get, sortBy } from "lodash";
+import { get, isArrayLikeObject, sortBy } from "lodash";
 import { DocumentDefinition, FilterQuery } from "mongoose";
 import PropertyModel from "../models/PropertyModel";
 import { InternalServerError } from "../../lib/appErrors";
 import { PropertyDocument } from "./../interfaces/Iproperty";
 import { Request, query } from "express";
+import { uploadToCloud } from "../../lib/cloudinary";
 
 class Property {
 	async submitPropety(
@@ -204,6 +205,33 @@ class Property {
 			throw new InternalServerError(err.message);
 		}
 	}
+
+	async editMedia(files: any, propField: any, propId: any) {
+		const property = await PropertyModel.findById({ _id: propId });
+		let gallery: any = property?.gallery;
+		for (let i=0; i<files.length; i++) {
+			if (Array.isArray(files)){
+				if (propField === "featuredImage"){
+					const { secure_url, public_id } = await uploadToCloud(files[i].path);
+					if (secure_url && public_id && property?.featuredImage) {
+						(property.featuredImage.url = secure_url), (property.featuredImage.publicId = public_id);
+					}
+				} else {
+					const { secure_url, public_id } = await uploadToCloud(files[i].path);
+					if (secure_url && public_id && Array(gallery)){
+						const currImg = [{ 
+							url: String(secure_url),
+							publicId: String(public_id)
+						}];
+						gallery?.push(currImg);
+					}
+				}
+				if (property?.gallery) property.gallery = gallery;
+				await property?.save();
+			}
+		}
+		return property;
+	}
 }
 
-export default new Property()
+export default new Property();

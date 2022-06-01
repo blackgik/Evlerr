@@ -90,7 +90,19 @@ export const AgentQuerySchema = object({
 	})
 })
 
+export const MediaPropSchema = object({
+	query: object({
+		propertyField: string({
+			required_error: "Property field for media to be edited required!"
+		}),
+		propertyId: string({
+			required_error: "Property Id required!"
+		})
+	})
+})
+
 export type propertyIdInput = TypeOf<typeof PropertyIdSchemaValidation>;
 export type propertyInput = TypeOf<typeof NewPropertySchema>;
 export type searchString = TypeOf<typeof PropertySearchStringSchema>;
 export type agentQuery = TypeOf<typeof AgentQuerySchema>;
+export type mediaProp = TypeOf<typeof MediaPropSchema>;

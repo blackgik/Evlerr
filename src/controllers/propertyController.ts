@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
+import { BadRequestError } from "../../lib/appErrors";
 import {
 	agentQuery,
+	mediaProp,
 	propertyIdInput,
 	propertyInput,
 	searchString
@@ -113,8 +115,17 @@ class Property {
 			},
 			req
 		);
-
 		res.send(appResponse("fetched properties successfully", getUserProperties));
+	}
+
+	async mediaUploader(req: Request<{}, {}, mediaProp["query"]>, res: Response) {
+		if (!req.files) throw new BadRequestError("Missing required photo(s) type");
+		const { propertyField, propertyId } = req.query, files = req.files;
+
+		const data = await propertyService.editMedia(files, propertyField, propertyId);
+		let medField = typeof propertyField !== "undefined" ? String(propertyField) : "";
+
+		res.send(appResponse("uploaded media file successfully", data?.get(medField)));
 	}
 }
 
