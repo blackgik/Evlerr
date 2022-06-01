@@ -93,7 +93,7 @@ class Property {
 		}
 	}
 
-	async searchProperty(search: any, filter: any, query: any) {
+	async searchProperty(search: any, filter: any, query: any, status: any) {
 		console.log(search);
 		// define pagination options
 		const page = Number(query?.page) || 1,
@@ -122,19 +122,21 @@ class Property {
 			{
 				$match: {
 					$and: [
+						{ 
+							$or: [ { status: { $regex: status } } ]
+						},
 						{
 							$or: [
 								{ region: { $regex: search } },
 								{ rooms: { $regex: search } },
 								{ propertyType: { $regex: search } },
-								{ propertyTitle: { $regex: search} },
-								{ propertyType: { $regex: search } }
+								{ propertyTitle: { $regex: search} }
 							]
 						},
 						{ 
 							$or: [
 								// advanced filter
-								{ amenities: { $regex: filter } },
+								{ amenities : { $regex: filter } },
 								{ mapLocation: { $regex: filter } },
 								{ bed: { $regex: filter } },
 								{ bath: { $regex: filter } },
@@ -143,8 +145,7 @@ class Property {
 								{ rooms: { $regex: filter } },
 								{ homeArea: { $regex: filter } },
 								{ price: { $regex: filter } },
-								{ garage: { $regex: filter } },
-								{ status: { $regex: filter } }
+								{ garage: { $regex: filter } }
 							]
 						}
 					]
@@ -168,8 +169,8 @@ class Property {
 				}
 			}
 		]);
-		const total = property[0].pageInfo[0].count,
-			pages = Math.ceil(total / limit),
+		const total = property[0]?.pageInfo[0]?.count,
+			pages = Math.ceil(total / limit) || 0,
 			result = {
 				docs: property[0].edges,
 				totalDocs: total,

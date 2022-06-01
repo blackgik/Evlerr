@@ -77,7 +77,8 @@ export const PropertyIdSchemaValidation = object({
 
 export const PropertySearchStringSchema = object({
 	query:object({
-		search: string().optional()
+		search: string().optional(),
+		status: string().optional()
 	})
 })
 
