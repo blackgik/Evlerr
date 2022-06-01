@@ -11,7 +11,7 @@ export const AddMemberSchema = object({
 export const memberSearchSchema = object({
 	query: object({
 		name: string({
-			required_error: "Missing required Member name"
+			required_error: "Missing required field: 'name'"
 		})
 	})
 });

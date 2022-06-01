@@ -36,6 +36,16 @@ class Membership {
             throw new InternalServerError(err.message)
         }
     }
+
+	async getAllMembers(agencyId: any) {
+		try {
+			return await MembershipModel.find({ agencyId }).populate({
+				path: "memberId"
+			})
+		} catch (err: any) {
+			throw new InternalServerError(err.message)
+		}
+	}
 }
 
 export default new Membership();

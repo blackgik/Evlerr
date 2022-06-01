@@ -42,6 +42,13 @@ class Membership {
 
         res.send(appResponse("deleted agent successfully", deletedAgent))
     }
+
+	async getAllMemberHandler( req: Request, res: Response ){
+		const agencyId = get(res.locals.user, "_id");
+
+		const allMembers = await membershipService.getAllMembers(agencyId);
+		res.send(appResponse("Fetched Members Sucessfully", allMembers));
+	}
 }
 
 export default new Membership();

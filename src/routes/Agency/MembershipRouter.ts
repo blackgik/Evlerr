@@ -26,5 +26,11 @@ export = function () {
 		[validateResource(deleteMemberSchema), authentication, authFunctions],
 		membershipController.deleteMemeberHandler
 	);
+	router.get(
+		"/get-members",
+		[authentication, authFunctions],
+		membershipController.getAllMemberHandler
+	)
+
 	return router;
 };
