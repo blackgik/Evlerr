@@ -94,7 +94,6 @@ class Property {
 	}
 
 	async searchProperty(search: any, filter: any, query: any, status: any) {
-		console.log(search);
 		// define pagination options
 		const page = Number(query?.page) || 1,
 			limit = Number(query?.limit) || 10;
