@@ -32,7 +32,9 @@ class Property {
 
 	async viewProperty(query: FilterQuery<PropertyDocument>) {
 		try {
-			return await PropertyModel.findById(query._id);
+			return await PropertyModel.findById(query._id).populate({
+				path: "agentId"
+			});
 		} catch (err: any) {
 			throw new InternalServerError(err.message);
 		}
