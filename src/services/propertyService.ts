@@ -1,4 +1,4 @@
-import { get, isArrayLikeObject, sortBy } from "lodash";
+import { get } from "lodash";
 import { DocumentDefinition, FilterQuery } from "mongoose";
 import PropertyModel from "../models/PropertyModel";
 import { InternalServerError } from "../../lib/appErrors";
@@ -45,19 +45,30 @@ class Property {
 		
 		try {
 			// define pagination options
-			const page = req.query?.page || 1,
-				  limit = req.query?.limit || 10;
+			let page = Number(req.query?.page) || 1,
+				  limit = Number(req.query?.limit) || 10,
+				  sort = {}
 
-			let orderBy = req.query?.orderBy || "createdAt";
-			if (String(orderBy).toLowerCase() === "newest") orderBy = "-createdAt";
+			let orderBy = req.query?.orderBy || "default";
+			if (String(orderBy).toLowerCase() === "newest") sort = { createdAt: -1 };
+			else sort = { createdAt: 1 };
 
-			const options = {
-				page: Number(page),
-				limit: Number(limit),
-				sort: orderBy
+
+			let total: number = await PropertyModel.find(query).countDocuments(),
+				pages = Math.ceil(total / limit) || 0,
+				docs = await PropertyModel.find(query)
+					.limit(limit)
+					.skip( (page -1 ) * limit )
+					.sort( sort ),
+				result = {
+				docs,
+				totalDocs: total,
+				limit,
+				totalPages: pages,
+				page,
+				hasPrevPage: page > 1,
+				hasNextPage: page < pages
 			};
-			// return await PropertyModel.find(query);
-			let result = await PropertyModel.paginate(query, options);
 			return result;
 		} catch (err: any) {
 			throw new InternalServerError(err.message);
@@ -66,28 +77,35 @@ class Property {
 
 	async publicProperties(req: Request) {
 		try {
-			// return await PropertyModel.find().populate({
-			// 	path: "agentId",
-			// 	model: "User"
-			// });
 			// define pagination options
-			const page = req.query?.page || 1,
-				  limit = req.query?.limit || 10;
+			let page = Number(req.query?.page) || 1,
+				  limit = Number(req.query?.limit) || 10,
+				  sort = {}
 
-			let orderBy = req.query?.orderBy || "createdAt";
-			if (String(orderBy).toLowerCase() === "newest") orderBy = "-createdAt";
+			let orderBy = req.query?.orderBy || "default";
+			if (String(orderBy).toLowerCase() === "newest") sort = { createdAt: -1 };
+			else sort = { createdAt: 1 };
 
-			const options = {
-				page: Number(page),
-				limit: Number(limit),
-				populate: {
-					path: "agentId",
-					model: "User"
-				},
-				sort: orderBy
+
+			let total: number = await PropertyModel.find().countDocuments(),
+				pages = Math.ceil(total / limit) || 0,
+				docs = await PropertyModel.find()
+					.populate({
+						path: "agentId",
+						model: "User"
+					})
+					.limit(limit)
+					.skip( (page -1 ) * limit )
+					.sort( sort ),
+				result = {
+				docs,
+				totalDocs: total,
+				limit,
+				totalPages: pages,
+				page,
+				hasPrevPage: page > 1,
+				hasNextPage: page < pages
 			};
-			// return await PropertyModel.find(query);
-			let result = await PropertyModel.paginate({}, options);
 			return result;
 		} catch (err: any) {
 			throw new InternalServerError(err.message);
@@ -187,19 +205,31 @@ class Property {
 		
 		try {
 			// define pagination options
-			const page = req.query?.page || 1,
-				  limit = req.query?.limit || 10;
+			let page = Number(req.query?.page) || 1,
+				  limit = Number(req.query?.limit) || 10,
+				  sort = {}
 
-			let orderBy = req.query?.orderBy || "createdAt";
-			if (String(orderBy).toLowerCase() === "newest") orderBy = "-createdAt";
+			let orderBy = req.query?.orderBy || "default";
+			if (String(orderBy).toLowerCase() === "newest") sort = { createdAt: -1 };
+			else sort = { createdAt: 1 };
 
-			const options = {
-				page: Number(page),
-				limit: Number(limit),
-				sort: orderBy
+
+			let total: number = await PropertyModel.find(query).countDocuments(),
+				pages = Math.ceil(total / limit) || 0,
+				docs = await PropertyModel.find(query)
+					.limit(limit)
+					.skip( (page -1 ) * limit )
+					.sort( sort ),
+				result = {
+				docs,
+				totalDocs: total,
+				limit,
+				totalPages: pages,
+				page,
+				hasPrevPage: page > 1,
+				hasNextPage: page < pages
 			};
-			// return await PropertyModel.find(query);
-			let result = await PropertyModel.paginate(query, options);
+
 			return result;
 		} catch (err: any) {
 			throw new InternalServerError(err.message);
@@ -208,7 +238,6 @@ class Property {
 
 	async editMedia(files: any, propField: any, propId: any) {
 		const property: any = await PropertyModel.findById({ _id: propId });
-		//let gallery: any = property?.gallery;
 		for (let i=0; i<files.length; i++) {
 			if (Array.isArray(files)){
 				if (propField === "featuredImage"){
