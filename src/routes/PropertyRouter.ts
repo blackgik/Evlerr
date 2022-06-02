@@ -7,7 +7,8 @@ import {
 	MediaPropSchema,
 	NewPropertySchema,
 	PropertyIdSchemaValidation,
-	PropertySearchStringSchema
+	PropertySearchStringSchema,
+	UpdatePropertyValidationSchema
 } from "../schemaValidation/propertyVallidationSchema";
 import { upload } from "./../../lib/multer";
 import userController from "../controllers/userController";
@@ -49,6 +50,16 @@ export = function () {
 		"/user/media-upload",
 		[validateResource(MediaPropSchema), upload.array("photo", 5), authentication, authFunctions],
 		propertyController.mediaUploader
+	);
+
+	router.patch(
+		"/user/update-property/:propertyId",
+		[
+			validateResource(PropertyIdSchemaValidation),
+			validateResource(UpdatePropertyValidationSchema),
+			authentication, authFunctions
+		],
+		propertyController.updatePropertyHander
 	);
 	return router;
 };

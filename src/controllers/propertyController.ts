@@ -5,7 +5,8 @@ import {
 	mediaProp,
 	propertyIdInput,
 	propertyInput,
-	searchString
+	searchString,
+	updateInput
 } from "../schemaValidation/propertyVallidationSchema";
 import propertyService from "../services/propertyService";
 import appResponse from "./../../lib/appResponse";
@@ -126,6 +127,13 @@ class Property {
 		let medField = typeof propertyField !== "undefined" ? String(propertyField) : "";
 
 		res.send(appResponse("uploaded media file successfully", data?.get(medField)));
+	}
+
+	async updatePropertyHander(req: Request<propertyIdInput["params"], updateInput["body"]>, res: Response) {
+		const { propertyId } = req.params;
+		const updatedProperty = await propertyService.updateProperty(propertyId, req.body);
+
+		res.send(appResponse("updated profile successfully", updatedProperty));
 	}
 }
 

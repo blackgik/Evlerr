@@ -232,6 +232,15 @@ class Property {
 		}
 		return property;
 	}
+
+	async updateProperty(propId: any, body: any) {
+		const property: any = await PropertyModel.findById({ _id: propId });
+		const updates = Object.keys(body);
+		updates.forEach( (update: any) =>  ( property[update] = body[update]) );
+
+		await property.save();
+		return property;
+	}
 }
 
 export default new Property();
