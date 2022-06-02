@@ -75,15 +75,60 @@ export const PropertyIdSchemaValidation = object({
     })
 })
 
-export const propertySearchStringSchema = object({
+export const PropertySearchStringSchema = object({
 	query:object({
-		// search:string({
-		// 	required_error: "search string is required"
-		// })
-		search: string().optional()
+		search: string().optional(),
+		status: string().optional()
 	})
 })
 
-export type propertyIdInput = TypeOf<typeof PropertyIdSchemaValidation>
+export const AgentQuerySchema = object({
+	query: object({
+		agentId: string({
+			required_error: "Agent Id is required!"
+		})
+	})
+})
+
+export const MediaPropSchema = object({
+	query: object({
+		propertyField: string({
+			required_error: "Property field for media to be edited required!"
+		}),
+		propertyId: string({
+			required_error: "propertyId required in the query"
+		})
+	})
+})
+
+export const UpdatePropertyValidationSchema = object({
+	body: object({
+		propertyTitle: string().optional(),
+		propertyType: string().optional(),
+		propertyDescription: string().optional(),
+		parentProperty: string().optional(),
+		status: string().optional(),
+		label: string().optional(),
+		material: string().optional(),
+		rooms: string().optional(),
+		bed: string().optional(),
+		bath: string().optional(),
+		garage: string().optional(),
+		homeArea: string().optional(),
+		energyClass: string().optional(),
+		energyIndex: string().optional(),
+		price: string().optional(),
+		pricePrefix: string().optional(),
+		priceSuffix: string().optional(),
+		priceCustom: string().optional(),
+		videoLink: string().optional(),
+		amenities: string().array().optional()
+	})
+});
+
+export type propertyIdInput = TypeOf<typeof PropertyIdSchemaValidation>;
+export type updateInput = TypeOf<typeof UpdatePropertyValidationSchema>;
 export type propertyInput = TypeOf<typeof NewPropertySchema>;
-export type propertySearchString = TypeOf<typeof propertySearchStringSchema>
+export type searchString = TypeOf<typeof PropertySearchStringSchema>;
+export type agentQuery = TypeOf<typeof AgentQuerySchema>;
+export type mediaProp = TypeOf<typeof MediaPropSchema>;

@@ -1,8 +1,12 @@
 import { Request, Response } from "express";
+import { BadRequestError } from "../../lib/appErrors";
 import {
+	agentQuery,
+	mediaProp,
 	propertyIdInput,
 	propertyInput,
-	propertySearchString
+	searchString,
+	updateInput
 } from "../schemaValidation/propertyVallidationSchema";
 import propertyService from "../services/propertyService";
 import appResponse from "./../../lib/appResponse";
@@ -61,9 +65,9 @@ class Property {
 		res.send(appResponse("fetched properties successfully", properties));
 	}
 
-	async searchPropertyHandler(req: Request<{}, {},{}, propertySearchString["query"]>, res: Response) {
-		const { search }= req.query;
-		delete req.query?.search;
+	async searchPropertyHandler(req: Request<{}, {},{}, searchString["query"]>, res: Response) {
+		const { search, status }= req.query;
+		delete req.query?.search; delete req.query?.status;
 		let advSearch:any = req.query,
 			queryPattern: string = "";
 
@@ -84,22 +88,52 @@ class Property {
 		}
 
 		const query =
-			typeof search !== "undefined" ? search.trim().toLowerCase() : ".*(?:)";
+			typeof search !== "undefined" ? search.trim().toLowerCase() : ".*(?:)",
+			statusQuery = typeof status !== "undefined" ? status.trim().toLowerCase() : "rent";
 		queryPattern = queryPattern === "" ? ".*(?:)" : queryPattern;
 		const rgx = (pattern: string) => new RegExp(`${pattern}`, `gi`);
 		const searchRgx = rgx(query),
-			filterRgx = rgx(queryPattern);
-		console.log(filterRgx)
+			filterRgx = rgx(queryPattern),
+			statusRgx = rgx(statusQuery);
 
 		const foundProperties = await propertyService.searchProperty(
 			searchRgx,
 			filterRgx,
-			req.query
+			req.query,
+			statusRgx
 		);
 
 		res.send(
 			appResponse("fetched property in city successfully", foundProperties)
 		);
+	}
+
+	async viewAgentProperties(req: Request<agentQuery["query"]>, res: Response) {
+		const { agentId } = req.query;
+		const getUserProperties = await propertyService.fetchAgentProperties(
+			{
+				agentId
+			},
+			req
+		);
+		res.send(appResponse("fetched properties successfully", getUserProperties));
+	}
+
+	async mediaUploader(req: Request<{}, {}, mediaProp["query"]>, res: Response) {
+		if (!req.files) throw new BadRequestError("Missing required photo(s) type");
+		const { propertyField, propertyId } = req.query, files = req.files;
+
+		const data = await propertyService.editMedia(files, propertyField, propertyId);
+		let medField = typeof propertyField !== "undefined" ? String(propertyField) : "";
+
+		res.send(appResponse("uploaded media file successfully", data[medField]));
+	}
+
+	async updatePropertyHander(req: Request<propertyIdInput["params"], updateInput["body"]>, res: Response) {
+		const { propertyId } = req.params;
+		const updatedProperty = await propertyService.updateProperty(propertyId, req.body);
+
+		res.send(appResponse("updated profile successfully", updatedProperty));
 	}
 }
 

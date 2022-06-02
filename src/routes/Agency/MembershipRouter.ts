@@ -3,6 +3,7 @@ import validateResource from "./../../middlewares/validateResource";
 import { authentication, authFunctions } from "./../../middlewares/Auth";
 import {
 	AddMemberSchema,
+	AgencyQuerySchema,
 	deleteMemberSchema,
 	memberSearchSchema
 } from "../../schemaValidation/agencyMemebershipValidationSchema";
@@ -26,5 +27,11 @@ export = function () {
 		[validateResource(deleteMemberSchema), authentication, authFunctions],
 		membershipController.deleteMemeberHandler
 	);
+	router.get(
+		"/get-members",
+		[validateResource(AgencyQuerySchema), authentication, authFunctions],
+		membershipController.getAllMemberHandler
+	)
+
 	return router;
 };

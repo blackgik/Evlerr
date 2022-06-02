@@ -3,9 +3,12 @@ import validateResource from "../middlewares/validateResource";
 import { authentication, authFunctions } from "../middlewares/Auth";
 import propertyController from "../controllers/propertyController";
 import {
+	AgentQuerySchema,
+	MediaPropSchema,
 	NewPropertySchema,
 	PropertyIdSchemaValidation,
-	propertySearchStringSchema
+	PropertySearchStringSchema,
+	UpdatePropertyValidationSchema
 } from "../schemaValidation/propertyVallidationSchema";
 import { upload } from "./../../lib/multer";
 import userController from "../controllers/userController";
@@ -36,7 +39,27 @@ export = function () {
 	);
 
 	router.get("/user/properties", propertyController.publicPropertiesHandler);
-	router.get("/search-property", validateResource(propertySearchStringSchema),propertyController.searchPropertyHandler)
+	router.get("/search-property", validateResource(PropertySearchStringSchema),propertyController.searchPropertyHandler)
+	router.get(
+		"/user/get-agent-properties",
+		[validateResource(AgentQuerySchema), authentication, authFunctions],
+		propertyController.viewAgentProperties
+	);
 
+	router.post(
+		"/user/media-upload",
+		[validateResource(MediaPropSchema), upload.array("photo", 5), authentication, authFunctions],
+		propertyController.mediaUploader
+	);
+
+	router.patch(
+		"/user/update-property/:propertyId",
+		[
+			validateResource(PropertyIdSchemaValidation),
+			validateResource(UpdatePropertyValidationSchema),
+			authentication, authFunctions
+		],
+		propertyController.updatePropertyHander
+	);
 	return router;
 };

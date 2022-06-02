@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { get } from "lodash";
 import {
+	agencyQuery,
     deleteInput,
 	MemberInput,
 	SearchInput
@@ -42,6 +43,13 @@ class Membership {
 
         res.send(appResponse("deleted agent successfully", deletedAgent))
     }
+
+	async getAllMemberHandler( req: Request<agencyQuery["query"]>, res: Response ){
+		const { agencyId } = req.query;
+
+		const allMembers = await membershipService.getAllMembers(agencyId, req);
+		res.send(appResponse("Fetched Members Sucessfully", allMembers));
+	}
 }
 
 export default new Membership();

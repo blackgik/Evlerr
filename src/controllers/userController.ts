@@ -76,7 +76,7 @@ class User {
 	) {
 		const role = req.query?.role || "user";
 
-        const result = await userService.getUsers(role);
+        const result = await userService.getUsers(role, req);
 
         res.send(appResponse(`found ${role} successfully`, result));
 	}

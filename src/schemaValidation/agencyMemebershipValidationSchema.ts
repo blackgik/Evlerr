@@ -11,7 +11,7 @@ export const AddMemberSchema = object({
 export const memberSearchSchema = object({
 	query: object({
 		name: string({
-			required_error: "Missing required Member name"
+			required_error: "Missing required field: 'name'"
 		})
 	})
 });
@@ -24,6 +24,15 @@ export const deleteMemberSchema = object({
 	})
 });
 
+export const AgencyQuerySchema = object({
+	query: object({
+		agencyId: string({
+			required_error: "Missing required query param: 'agencyId'."
+		})
+	})
+});
+
 export type MemberInput = TypeOf<typeof AddMemberSchema>;
 export type SearchInput = TypeOf<typeof memberSearchSchema>;
 export type deleteInput = TypeOf<typeof deleteMemberSchema>;
+export type agencyQuery = TypeOf<typeof AgencyQuerySchema>;

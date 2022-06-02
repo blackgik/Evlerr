@@ -4,6 +4,7 @@ import { InternalServerError } from "../../lib/appErrors";
 import { PasswordChangeDocument, UserDocument } from "../interfaces/Iuser";
 import { deleteFromCloud, uploadToCloud } from "../../lib/cloudinary";
 import { BadRequestError, InvalidError } from "../../lib/appErrors";
+import { Request } from "express";
 class User {
 	async uploadPicture(path: string, user: any) {
 		const { secure_url, public_id } = await uploadToCloud(path);
@@ -54,9 +55,34 @@ class User {
 		return user;
 	}
 
-	async getUsers(role: any) {
+	async getUsers(role: any, req: Request) {
 		try {
-			return await UserModel.find({ role });
+			// define pagination options
+			let page = Number(req.query?.page) || 1,
+				  limit = Number(req.query?.limit) || 10,
+				  sort = {}
+
+			let orderBy = req.query?.orderBy || "default";
+			if (String(orderBy).toLowerCase() === "newest") sort = { createdAt: -1 };
+			else sort = { createdAt: 1 };
+
+
+			let total: number = await UserModel.find({ role }).countDocuments(),
+				pages = Math.ceil(total / limit) || 0,
+				docs = await UserModel.find({ role })
+					.limit(limit)
+					.skip( (page -1 ) * limit )
+					.sort( sort ),
+				result = {
+				docs,
+				totalDocs: total,
+				limit,
+				totalPages: pages,
+				page,
+				hasPrevPage: page > 1,
+				hasNextPage: page < pages
+			};
+			return result;
 		} catch (err: any) {
 			throw new InternalServerError(err.message);
 		}

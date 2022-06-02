@@ -1,3 +1,4 @@
+import { Request } from "express";
 import {FilterQuery, Types } from "mongoose";
 import { InternalServerError } from "../../../lib/appErrors";
 import { MembershipDocument } from "../../interfaces/IAgencyMembership";
@@ -36,6 +37,42 @@ class Membership {
             throw new InternalServerError(err.message)
         }
     }
+
+	async getAllMembers(agencyId: any, req: Request) {
+		try {
+			// define pagination options
+			let page = Number(req.query?.page) || 1,
+				  limit = Number(req.query?.limit) || 10,
+				  sort = {}
+
+			let orderBy = req.query?.orderBy || "default";
+			if (String(orderBy).toLowerCase() === "newest") sort = { createdAt: -1 };
+			else sort = { createdAt: 1 };
+
+
+			let total: number = await MembershipModel.find({ agencyId }).countDocuments(),
+				pages = Math.ceil(total / limit) || 0,
+				docs = await MembershipModel.find({ agencyId })
+					.populate({
+						path: "memberId"
+					})
+					.limit(limit)
+					.skip( (page -1 ) * limit )
+					.sort( sort ),
+				result = {
+				docs,
+				totalDocs: total,
+				limit,
+				totalPages: pages,
+				page,
+				hasPrevPage: page > 1,
+				hasNextPage: page < pages
+			};
+			return result;
+		} catch (err: any) {
+			throw new InternalServerError(err.message)
+		}
+	}
 }
 
 export default new Membership();
