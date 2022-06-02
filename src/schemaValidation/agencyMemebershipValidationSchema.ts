@@ -27,7 +27,7 @@ export const deleteMemberSchema = object({
 export const AgencyQuerySchema = object({
 	query: object({
 		agencyId: string({
-			required_error: "Missing required Member id."
+			required_error: "Missing required query param: 'agencyId'."
 		})
 	})
 });
