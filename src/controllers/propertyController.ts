@@ -126,7 +126,7 @@ class Property {
 		const data = await propertyService.editMedia(files, propertyField, propertyId);
 		let medField = typeof propertyField !== "undefined" ? String(propertyField) : "";
 
-		res.send(appResponse("uploaded media file successfully", data?.get(medField)));
+		res.send(appResponse("uploaded media file successfully", data[medField]));
 	}
 
 	async updatePropertyHander(req: Request<propertyIdInput["params"], updateInput["body"]>, res: Response) {
