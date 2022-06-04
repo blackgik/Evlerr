@@ -89,7 +89,7 @@ class Property {
 
 		const query =
 			typeof search !== "undefined" ? search.trim().toLowerCase() : ".*(?:)",
-			statusQuery = typeof status !== "undefined" ? status.trim().toLowerCase() : "rent";
+			statusQuery = typeof status !== "undefined" ? status.trim().toLowerCase() : "for rent";
 		queryPattern = queryPattern === "" ? ".*(?:)" : queryPattern;
 		const rgx = (pattern: string) => new RegExp(`${pattern}`, `gi`);
 		const searchRgx = rgx(query),
