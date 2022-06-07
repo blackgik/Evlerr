@@ -42,10 +42,15 @@ class User {
 		}
 	}
 
-	async validatePassword({ email, password }: { email: string; password: string }) {
+	async validatePassword({
+		email,
+		password
+	}: {
+		email: string;
+		password: string;
+	}) {
 		// we need to first find if the user exist;
 		const user = await UserModel.findOne({ email });
-		console.log(user)
 
 		if (!user) throw new InvalidError("Invalid User");
 
