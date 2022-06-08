@@ -50,6 +50,12 @@ export = function () {
 		validateResource(userSearchSchema),
 		userController.getUserHandler
 	);
+
+	router.get(
+		"/user/dashboard",
+		[authentication, authFunctions],
+		userController.getDashboardHandler
+	);
 	
 	return router;
 };

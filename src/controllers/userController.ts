@@ -80,6 +80,18 @@ class User {
 
         res.send(appResponse(`found ${role} successfully`, result));
 	}
+
+	async getDashboardHandler(req: Request, res: Response) {
+		const user = res.locals.user;
+		const propertyCounts = await userService.getPropertyCounts(user);
+		const data = {
+			name: user.fullName,
+			userName: user.username,
+			propertyCounts
+		};
+
+		res.send(appResponse("uploaded file successfully", data));
+	}
 }
 
 export default new User();
