@@ -5,6 +5,7 @@ import { PasswordChangeDocument, UserDocument } from "../interfaces/Iuser";
 import { deleteFromCloud, uploadToCloud } from "../../lib/cloudinary";
 import { BadRequestError, InvalidError } from "../../lib/appErrors";
 import { Request } from "express";
+import PropertyModel from "../models/PropertyModel";
 class User {
 	async uploadPicture(path: string, user: any) {
 		const { secure_url, public_id } = await uploadToCloud(path);
@@ -86,6 +87,10 @@ class User {
 		} catch (err: any) {
 			throw new InternalServerError(err.message);
 		}
+	}
+
+	async getPropertyCounts(user: any){
+		return await PropertyModel.find({ agentId: user._id }).countDocuments();
 	}
 }
 
